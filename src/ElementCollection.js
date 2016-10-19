@@ -4,124 +4,186 @@ import EA from './EventAggregator'
 
 
 class ElementCollection extends Collection {
+  static addElementToContainer(containerName, domEl) {
+    const element = new Element(domEl)
+
+    EA.dispatchEvent('addElementToContainer', containerName, element)
+  }
+
   constructor(container) {
     super()
 
     this.container = container
     this.focusedIndex = null
+    this.countInRow = null
+    this.currentRowNum = 0
 
     this.didMount()
-  }
-
-  static addElementToContainer(containerName, domEl) {
-    const element = new Element(domEl)
-    
-    EA.dispatchEvent('addElementToContainer', containerName, element)
   }
 
   didMount() {
     this.bindListeners()
   }
 
+  bindListeners() {
+    EA.subscribe('focusContainer', this.focus.bind(this))
+    EA.subscribe('navigate', this.navigate.bind(this), 2)
+  }
+
   add(item, name) {
     super.add(item, name)
+    this.getCountInRow()
     EA.dispatchEvent('addElement', this.container)
   }
 
-  bindListeners() {
-    EA.subscribe('focusContainer', (container) => {
-      if (this.container != container) {
-        return
+  focus(container) {
+    if (this.container != container) {
+      return
+    }
+
+    if (!Boolean(this.length)) {
+      return
+    }
+
+    let elementIndex
+
+    if (this.focusedIndex == null) {
+      this.focusedIndex = elementIndex = 0
+    }
+    else {
+      switch(this.enterTo) {
+        case 'first':
+          elementIndex = 0
+          break
+
+        case 'last':
+          elementIndex = this.length - 1
+          break
+
+        default:
+          elementIndex = this.focusedIndex
+          break
       }
+    }
 
-      if (!Boolean(this.length)) {
-        return
-      }
+    const element = this.getByIndex(elementIndex)
 
-      let elementIndex
+    element.focus()
+  }
 
-      if (this.focusedIndex == null) {
-        this.focusedIndex = elementIndex = 0
-      }
-      else {
-        switch(this.enterTo) {
-          case 'first':
-            elementIndex = 0
-            break
+  navigate(direction, dispatchedEvent) {
+    if (!this.container.focused) { // check if dispatched this container
+      return
+    }
 
-          case 'last':
-            elementIndex = this.length - 1
-            break
+    if (!Boolean(this.length)) { // check if there are elements in container
+      return
+    }
 
-          default:
-            elementIndex = this.focusedIndex
-            break
-        }
-      }
+    const elementToNavigate = this.getElementToNavigate(direction)
 
-      const element = this.getByIndex(elementIndex)
-
-      element.focus()
-    })
-
-    EA.subscribe('navigate', (direction, dispatchedEvent) => {
-      if (!this.container.focused) {
-        return
-      }
-
-      if (!Boolean(this.length)) {
-        return
-      }
-
-      const navigateToElement = this.getElementToNavigate(direction)
-
-      if (navigateToElement) {
-        dispatchedEvent.stopPropagation()
-        navigateToElement.focus()
-      }
-    }, 2)
+    if (elementToNavigate) {
+      dispatchedEvent.stopPropagation()
+      elementToNavigate.focus()
+    }
   }
 
   getElementToNavigate(direction) {
     let element
 
-    switch(direction) {
-      case 'up':
+    this.getCountInRow()
+    this.getCurrentRowNum()
 
-        break
+    if (direction == 'up') {
+      const newElementIndex = this.getPrevRowElementIndex()
+      element = this.getByIndex(newElementIndex)
 
-      case 'down':
+      if (element) {
+        this.focusedIndex = newElementIndex
+      }
+    }
+    else if (direction == 'down') {
+      const newElementIndex = this.getNextRowElementIndex()
+      element = this.getByIndex(newElementIndex)
 
-        break
+      if (element) {
+        this.focusedIndex = newElementIndex
+      }
+    }
+    else if (direction == 'left') {
+      const isFocusedFirstInRow = this.isFocusedFirstInRow()
+      element = isFocusedFirstInRow ? null : this.getByIndex(this.focusedIndex - 1)
 
-      case 'left':
-        element = this.getByIndex(this.focusedIndex - 1)
-        if (element) {
-          this.focusedIndex = --this.focusedIndex
-        }
-        break
+      if (element) {
+        this.focusedIndex = --this.focusedIndex
+      }
+    }
+    else if (direction == 'right') {
+      const isFocusedLastInRow = this.isFocusedLastInRow()
+      element = isFocusedLastInRow ? null : this.getByIndex(this.focusedIndex + 1)
 
-      case 'right':
-        element = this.getByIndex(this.focusedIndex + 1)
-        if (element) {
-          this.focusedIndex = ++this.focusedIndex
-        }
-        break
+      if (element) {
+        this.focusedIndex = ++this.focusedIndex
+      }
     }
 
     return element
   }
 
-  getFocusedElement() {
-    return this.getByIndex(this.focusedIndex)
+  getCountInRow() {
+    let count = 0
+    let offsetLeft = 0
+
+    if (this.length == 0) {
+      count = 1
+    }
+    else {
+      for (let i = 0; i < this.collection.length; i++) {
+        const element = this.collection[i]
+
+        if (element.domEl.offsetLeft > offsetLeft) {
+          offsetLeft = element.domEl.offsetLeft
+          count++
+        }
+        else {
+          break
+        }
+      }
+    }
+
+    this.countInRow = count
   }
 
-  isFocusedElementFirst() {
-    return this.focusedIndex == 0
+  getCurrentRowNum() {
+    this.currentRowNum = Math.ceil(this.focusedIndex / this.countInRow)
+    return this.currentRowNum
   }
 
-  isFocusedElementLast() {
-    return this.focusedIndex == this.length
+  getPrevRowElementIndex() {
+    return this.focusedIndex - this.countInRow
+  }
+
+  getNextRowElementIndex() {
+    let newElementIndex = this.focusedIndex + this.countInRow
+    const isCurrentRowLast = this.isCurrentRowLast()
+
+    if (newElementIndex > this.length - 1 && !isCurrentRowLast) {
+      newElementIndex = this.length - 1
+    }
+
+    return newElementIndex
+  }
+
+  isCurrentRowLast() {
+    return this.getCurrentRowNum() == Math.ceil(this.length / this.countInRow)
+  }
+
+  isFocusedFirstInRow() {
+    return !Boolean(this.focusedIndex % this.countInRow)
+  }
+
+  isFocusedLastInRow() {
+    return this.focusedIndex == this.length - 1 || !Boolean((this.focusedIndex + 1) % this.countInRow)
   }
 }
 

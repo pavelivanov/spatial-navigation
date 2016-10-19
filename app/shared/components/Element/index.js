@@ -29,7 +29,7 @@ export default class ContainerElement extends React.Component {
     return (
       <div ref="element" styleName={elementStyleName} style={{ width, height }}>
         <Center>
-          <div styleName="label">{num}</div>
+          <div styleName="label">{num + 1}</div>
         </Center>
       </div>
     )
