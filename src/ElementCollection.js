@@ -158,8 +158,13 @@ class ElementCollection extends Collection {
     this.countInRow = count
   }
 
+  getRowCount() {
+    return Math.ceil(this.length / this.countInRow)
+  }
+
   getCurrentRowNum() {
-    this.currentRowNum = Math.ceil(this.focusedIndex / this.countInRow)
+    // ductape: if focused first element in row then this.focusedIndex % this.countInRow == 0
+    this.currentRowNum = Math.ceil((this.focusedIndex + (this.isFocusedFirstInRow() ? 1 : 0)) / this.countInRow)
     return this.currentRowNum
   }
 
@@ -179,7 +184,7 @@ class ElementCollection extends Collection {
   }
 
   isCurrentRowLast() {
-    return this.getCurrentRowNum() == Math.ceil(this.length / this.countInRow)
+    return this.getRowCount() == 1 || this.getCurrentRowNum() == this.getRowCount()
   }
 
   isFocusedFirstInRow() {
