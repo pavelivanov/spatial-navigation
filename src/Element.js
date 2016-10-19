@@ -7,8 +7,6 @@ class Element {
   }
   
   constructor(domEl) {
-    super()
-
     this.domEl = domEl
     this.disabled = false
 
@@ -17,6 +15,16 @@ class Element {
   
   didMount() {
     this.domEl.setAttribute('tabindex', '-1')
+    this.domEl.style.outline = 'none'
+    this.bindListeners()
+  }
+
+  bindListeners() {
+    this.domEl.addEventListener('click', ::this.onUserFocus)
+  }
+
+  unbindListeners() {
+    this.domEl.removeEventListener('click', ::this.onUserFocus)
   }
 
   disable() {
@@ -33,10 +41,20 @@ class Element {
     EA.dispatchEvent('focusElement', this)
   }
 
+  onUserFocus() {
+    this.focus()
+
+    EA.dispatchEvent('userFocusElement', this)
+  }
+
   blur() {
     this.domEl.blur()
 
     EA.dispatchEvent('blurElement', this)
+  }
+
+  destroy() {
+    this.unbindListeners()
   }
 }
 

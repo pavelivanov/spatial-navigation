@@ -1,15 +1,8 @@
 import Collection from './Collection'
-import Element from './Element'
 import EA from './EventAggregator'
 
 
 class ElementCollection extends Collection {
-  static addElementToContainer(containerName, domEl) {
-    const element = new Element(domEl)
-
-    EA.dispatchEvent('addElementToContainer', containerName, element)
-  }
-
   constructor(container) {
     super()
 
@@ -26,17 +19,20 @@ class ElementCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('focusContainer', this.focus.bind(this))
-    EA.subscribe('navigate', this.navigate.bind(this), 2)
+    EA.subscribe('focusContainer', ::this.onContainerFocused)
+    EA.subscribe('navigate', ::this.onNavigate, 2)
+    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
   }
 
   add(item, name) {
+    item.container = this.container
+
     super.add(item, name)
     this.getCountInRow()
     EA.dispatchEvent('addElement', this.container)
   }
 
-  focus(container) {
+  onContainerFocused(container) {
     if (this.container != container) {
       return
     }
@@ -71,7 +67,15 @@ class ElementCollection extends Collection {
     element.focus()
   }
 
-  navigate(direction, dispatchedEvent) {
+  onUserFocusElement(element) {
+    if (this.container != element.container) { // check element belongs to this collection
+      return
+    }
+
+    this.focusedIndex = this.indexOf(element)
+  }
+
+  onNavigate(direction, dispatchedEvent) {
     if (!this.container.focused) { // check if dispatched this container
       return
     }

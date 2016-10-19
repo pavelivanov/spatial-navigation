@@ -5,14 +5,13 @@ import Container from './Container'
 
 class Layout {
   constructor() {
-    super()
-    
     this.containers = ContainerCollection
   }
 
   init(map, opts) {
     for (const containerName in map) {
-      this.containers.add(Container.create(containerName, map[containerName]), containerName)
+      const container = Container.create(containerName, map[containerName])
+      this.containers.add(container, containerName)
     }
 
     if (opts.startContainerName) {

@@ -3,8 +3,6 @@ import EA from './EventAggregator'
 
 class Keyboard {
   constructor() {
-    super()
-    
     // TODO move outside to dynamically add keys
     this.keyMapping = {
       '37': 'left',
@@ -21,11 +19,13 @@ class Keyboard {
   }
 
   bindListeners() {
-    document.addEventListener('keyup', (event) => {
-      if (!Boolean(event.keyCode in this.keyMapping)) return
-      const direction = this.keyMapping[event.keyCode]
-      EA.dispatchEvent('navigate', direction)
-    })
+    document.addEventListener('keyup', ::this.navigate)
+  }
+
+  navigate(event) {
+    if (!Boolean(event.keyCode in this.keyMapping)) return
+    const direction = this.keyMapping[event.keyCode]
+    EA.dispatchEvent('navigate', direction)
   }
 }
 

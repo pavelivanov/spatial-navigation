@@ -27,7 +27,7 @@ export default class Home extends React.Component {
       }
     })
 
-    EventAggregator.subscribe('unfocusContainer', (container) => {
+    EventAggregator.subscribe('blurContainer', (container) => {
       if (container.name == 'Sidebar') {
         this.setState({
           focused: false

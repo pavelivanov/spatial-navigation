@@ -8,8 +8,6 @@ class Container {
   }
   
   constructor(name, map) {
-    super()
-    
     this.name = name
     this.focused = false
     this.elements = new ElementCollection(this)
@@ -24,28 +22,31 @@ class Container {
   }
 
   bindListeners() {
-    EA.subscribe('addElementToContainer', (containerName, element) => {
-      if (this.name == containerName) {
-        this.elements.push(element)
-      }
-    })
+    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
   }
-  
-  getContainerToNavigate(direction) {
-    return this.leaveFor[direction]
+
+  onUserFocusElement(element) {
+    if (this != element.container) {
+      return
+    }
+
+    this.focused = true
   }
-  
+
   focus() {
     this.focused = true
 
     EA.dispatchEvent('focusContainer', this)
   }
 
-  // TODO rewrite
-  unfocus() {
+  blur() {
     this.focused = false
 
-    EA.dispatchEvent('unfocusContainer', this)
+    EA.dispatchEvent('blurContainer', this)
+  }
+
+  getContainerToNavigate(direction) {
+    return this.leaveFor[direction]
   }
 
   getElementCollection() {

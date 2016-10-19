@@ -14,6 +14,10 @@ class Collection {
     }
   }
 
+  indexOf(item) {
+    return this.collection.indexOf(item)
+  }
+
   getByIndex(index) {
     return this.collection[index]
   }

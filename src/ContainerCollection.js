@@ -16,19 +16,28 @@ class ContainerCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('navigate', (direction) => {
-      const containerNameToNavigate = this.focusedContainer.getContainerToNavigate(direction)
-      const containerToNavigate = this.getByName(containerNameToNavigate)
+    EA.subscribe('navigate', ::this.onNavigate, 1)
+    EA.subscribe('focusContainer', ::this.onContainerFocused)
+    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
+  }
 
-      if (containerToNavigate) {
-        this.focusedContainer.unfocus()
-        containerToNavigate.focus()
-      }
-    }, 1)
+  onNavigate(direction) {
+    const containerNameToNavigate = this.focusedContainer.getContainerToNavigate(direction)
+    const containerToNavigate = this.getByName(containerNameToNavigate)
 
-    EA.subscribe('focusContainer', (container) => {
-      this.focusedContainer = container
-    })
+    if (containerToNavigate) {
+      this.focusedContainer.blur()
+      containerToNavigate.focus()
+    }
+  }
+
+  onContainerFocused(container) {
+    this.focusedContainer = container
+  }
+
+  onUserFocusElement(element) {
+    this.focusedContainer.blur()
+    this.focusedContainer = element.container
   }
 }
 
