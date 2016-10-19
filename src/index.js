@@ -1,12 +1,15 @@
-import Layout from './Layout'
-import Container from './Container'
+import SpatialNavigation from './SpatialNavigation'
+import EventAggregator from './EventAggregator'
+import ContainerCollection from './ContainerCollection'
+import ElementCollection from './ElementCollection'
 import Element from './Element'
-import Event from './Event'
 
+
+export default SpatialNavigation
 
 export {
-  Layout,
-  Container,
+  EventAggregator,
+  ContainerCollection,
+  ElementCollection,
   Element,
-  Event,
 }

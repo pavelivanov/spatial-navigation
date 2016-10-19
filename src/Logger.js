@@ -3,9 +3,9 @@ class Logger {
     
   }
 
-  write(data) {
-    console.log(data.message)
+  write() {
+    console.log(...arguments)
   }
 }
 
-export default Logger
+export default new Logger

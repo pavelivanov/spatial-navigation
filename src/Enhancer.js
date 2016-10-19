@@ -1,6 +1,6 @@
 class Enhancer {
   constructor() {
-    this.didMount()
+    setTimeout(this.didMount.bind(this), 0)
   }
 
   didMount() {}

@@ -1,42 +1,32 @@
 import Enhancer from './Enhancer'
 import EA from './EventAggregator'
-import Logger from './Logger'
+import ContainerCollection from './ContainerCollection'
+import Container from './Container'
 
 
 class Layout extends Enhancer {
   constructor() {
     super()
     
-    this.containers = []
-    this.focusedContainer = null
+    this.containers = ContainerCollection
   }
 
-  didMount() {
-    this.bindListeners()
-  }
+  init(map, opts) {
+    for (const containerName in map) {
+      this.containers.add(Container.create(containerName, map[containerName]), containerName)
+    }
 
-  bindListeners() {
-    EA.subscribe('navigate', (event /* { direction: 'up' } */) => {
-      const navigateTo = this.focusedContainer.leaveFor[event.direction]
-
-      for (let i = 0; i < this.containers.length; i++) {
-        if (this.containers[i].name = navigateTo) {
-          this.focusContainer(this.containers[i])
-          break
+    if (opts.startContainerName) {
+      EA.once('addElement', (container) => {
+        if (container.name == opts.startContainerName) {
+          container.focus()
+          return true
         }
-      }
-    })
 
-    // TODO is it correct to use Logger like this?
-    Logger.write({
-      message: 'Layout subsribed to navigate'
-    })
-  }
-
-  focusContainer(container) {
-    this.focusedContainer = container
-    container.focus()
+        return false
+      })
+    }
   }
 }
 
-export default Layout
+export default new Layout

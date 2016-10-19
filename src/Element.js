@@ -3,17 +3,19 @@ import EA from './EventAggregator'
 
 
 class Element extends Enhancer {
+  static create(domEl) {
+    return new this(domEl)
+  }
+  
   constructor(domEl) {
     super()
 
     this.domEl = domEl
     this.disabled = false
-  }
-  
-  didMount() {
+
     this.domEl.setAttribute('tabindex', '-1')
   }
-  
+
   disable() {
     this.disabled = true
   }
@@ -26,6 +28,12 @@ class Element extends Enhancer {
     this.domEl.focus()
 
     EA.dispatchEvent('focusElement', this)
+  }
+
+  blur() {
+    this.domEl.blur()
+
+    EA.dispatchEvent('blurElement', this)
   }
 }
 
