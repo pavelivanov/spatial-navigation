@@ -1,10 +1,9 @@
-import Enhancer from './Enhancer'
 import EA from './EventAggregator'
 import ContainerCollection from './ContainerCollection'
 import Container from './Container'
 
 
-class Layout extends Enhancer {
+class Layout {
   constructor() {
     super()
     

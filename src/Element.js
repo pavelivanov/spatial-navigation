@@ -1,8 +1,7 @@
-import Enhancer from './Enhancer'
 import EA from './EventAggregator'
 
 
-class Element extends Enhancer {
+class Element {
   static create(domEl) {
     return new this(domEl)
   }
@@ -13,6 +12,10 @@ class Element extends Enhancer {
     this.domEl = domEl
     this.disabled = false
 
+    this.didMount()
+  }
+  
+  didMount() {
     this.domEl.setAttribute('tabindex', '-1')
   }
 

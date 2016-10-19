@@ -1,9 +1,8 @@
-import Enhancer from './Enhancer'
 import EA from './EventAggregator'
 import ElementCollection from './ElementCollection'
 
 
-class Container extends Enhancer {
+class Container {
   static create(name, map) {
     return new this(name, map)
   }
@@ -16,6 +15,8 @@ class Container extends Enhancer {
     this.elements = new ElementCollection(this)
     this.leaveFor = map || {} // which Container will be focused on leave this Container
     this.enterTo = 'default' // which Element will be focused on enter this Container ( first | last | default )
+
+    this.didMount()
   }
 
   didMount() {

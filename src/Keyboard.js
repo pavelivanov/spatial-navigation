@@ -1,8 +1,7 @@
-import Enhancer from './Enhancer'
 import EA from './EventAggregator'
 
 
-class Keyboard extends Enhancer {
+class Keyboard {
   constructor() {
     super()
     
@@ -13,6 +12,8 @@ class Keyboard extends Enhancer {
       '39': 'right',
       '40': 'down'
     }
+
+    this.didMount()
   }
 
   didMount() {

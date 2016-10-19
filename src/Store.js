@@ -1,12 +1,13 @@
-import Enhancer from './Enhancer'
 import EA from './EventAggregator'
 
 
 // Use as @decorator on other components to enhance state
 
-class Store extends Enhancer {
+class Store {
   constructor() {
     this.paused = false // if `true` disable listening all keyboard events
+    
+    this.didMount()
   }
 
   didMount() {
