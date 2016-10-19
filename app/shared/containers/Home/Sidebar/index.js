@@ -5,7 +5,7 @@ import { EventAggregator } from 'SN'
 import CSSModules from 'react-css-modules'
 import style from './style'
 
-import Element from './Element'
+import Element from 'components/Element'
 
 
 @CSSModules(style, { allowMultiple: true })
@@ -49,7 +49,7 @@ export default class Home extends React.Component {
       <div styleName={sidebarStyleName}>
         {
           Array.apply(null, { length: 5 }).map(Number.call, Number).map((num) => (
-            <Element key={num} num={num} />
+            <Element key={num} num={num} block height={100} />
           ))
         }
       </div>
