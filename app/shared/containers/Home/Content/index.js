@@ -13,7 +13,7 @@ export default class Home extends React.Component {
       <div styleName="content">
         {
           Array.apply(null, { length: 25 }).map(Number.call, Number).map((num) => (
-            <Element key={num} num={num} width={100} height={100} />
+            <Element key={num} num={num} containerName="Content" width={100} height={100} />
           ))
         }
       </div>

@@ -49,7 +49,7 @@ export default class Home extends React.Component {
       <div styleName={sidebarStyleName}>
         {
           Array.apply(null, { length: 5 }).map(Number.call, Number).map((num) => (
-            <Element key={num} num={num} block height={100} />
+            <Element key={num} num={num} containerName="Sidebar" block height={100} />
           ))
         }
       </div>

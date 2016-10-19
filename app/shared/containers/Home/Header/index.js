@@ -13,7 +13,7 @@ export default class HeaderElement extends React.Component {
       <div styleName="header">
         {
           Array.apply(null, { length: 3 }).map(Number.call, Number).map((num) => (
-            <Element key={num} num={num} width={100} height={30} />
+            <Element key={num} num={num} containerName="Header" width={100} height={30} />
           ))
         }
       </div>

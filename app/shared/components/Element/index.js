@@ -10,11 +10,13 @@ import Center from 'components/Center'
 
 
 @CSSModules(style, { allowMultiple: true })
-export default class ContentElement extends React.Component {
+export default class ContainerElement extends React.Component {
   componentDidMount() {
+    const { containerName } = this.props
+
     const element = ReactDOM.findDOMNode(this.refs.element)
 
-    ContainerCollection.getByName('Content').getElementCollection().add(new Element(element))
+    ContainerCollection.getByName(containerName).getElementCollection().add(new Element(element))
   }
 
   render() {
