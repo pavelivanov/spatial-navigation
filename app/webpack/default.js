@@ -1,7 +1,7 @@
-import path from 'path'
-import webpack from 'webpack'
-import requireDir from 'require-dir'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
+var path = require('path')
+var webpack = require('webpack')
+var requireDir = require('require-dir')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 
 var paths = {

@@ -2,7 +2,7 @@
   "name": "spatial-navigation-like-youtubetv-app",
   "scripts": {
     "dev": "node ./bin/server",
-    "clean": "rimraf build",
+    "clean": "rimraf ./build",
     "build": "npm run clean && cross-env DEBUG=app:* NODE_ENV=development CONFIG=development node ./bin/compile",
     "build:prod": "npm run clean && cross-env DEBUG=app:* NODE_ENV=production CONFIG=production node ./bin/compile",
     "start:prod": "cross-env NODE_ENV=production CONFIG=production node ./bin/server"

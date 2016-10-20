@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     test: /\.js$/,
     loaders: [ 'react-hot', 'babel' ],

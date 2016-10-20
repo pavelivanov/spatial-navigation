@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     test: /\.css$/,
     loader: 'style!css?modules&localIdentName=[local]___[hash:base64:5]',

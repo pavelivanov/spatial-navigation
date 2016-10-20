@@ -1,4 +1,4 @@
-import path from 'path'
+var path = require('path')
 
 
 const filename = {
@@ -6,7 +6,7 @@ const filename = {
   name: 'fonts/[name].[ext]',
 }
 
-export default [
+module.exports = [
   { 
     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
     loader: 'url',

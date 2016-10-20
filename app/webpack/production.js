@@ -1,8 +1,8 @@
-import webpack from 'webpack'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
+var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 
-export default (webpackConfig) => {
+module.exports = (webpackConfig) => {
   delete webpackConfig.devtool
   
   webpackConfig.module.loaders = webpackConfig.module.loaders.map((loader) => {

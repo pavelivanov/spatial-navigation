@@ -1,10 +1,6 @@
-import path from 'path'
-import express from 'express'
-import bodyParser from 'body-parser'
-import webpack from 'webpack'
-import webpackMiddleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
-import config from '../../webpack'
+var path                  = require('path')
+var express               = require('express')
+var bodyParser            = require('body-parser')
 
 
 const isDeveloping = process.env.NODE_ENV !== 'production'
@@ -17,6 +13,11 @@ app.use(bodyParser.json())
 
 
 if (isDeveloping) {
+  var webpack               = require('webpack')
+  var config                = require('../../webpack')
+  var webpackMiddleware     = require('webpack-dev-middleware')
+  var webpackHotMiddleware  = require('webpack-hot-middleware')
+
   const compiler = webpack(config)
   const middleware = webpackMiddleware(compiler, {
     publicPath: config.output.publicPath,

@@ -1,6 +1,7 @@
-import path from 'path'
+var path = require('path')
 
-export default [
+
+module.exports = [
   {
     test   : /\.(png|ico|jpg|jpeg|gif|svg(\?.*)?)$/,
     loader : 'file',
