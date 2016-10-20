@@ -12,12 +12,13 @@ no-select()
   user-select: none
 
 input-placeholder()
-  &.placeholder
-  &:placeholder
-  &:-moz-placeholder
-  &::-moz-placeholder
-  &:-ms-input-placeholder
   &::-webkit-input-placeholder
+    {block}
+  &:-moz-placeholder
+    {block}
+  &::-moz-placeholder
+    {block}
+  &:-ms-input-placeholder
     {block}
 
 hidden-input()

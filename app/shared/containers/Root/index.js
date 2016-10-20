@@ -6,12 +6,12 @@ SN.init({
   'Sidebar': {
     right: 'Content'
   },
-  'Header': {
+  'Search': {
     left: 'Sidebar',
     down: 'Content'
   },
   'Content': {
-    up: 'Header',
+    up: 'Search',
     left: 'Sidebar'
   }
 }, {
