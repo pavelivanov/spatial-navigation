@@ -1,7 +1,7 @@
 import EA from './EventAggregator'
 import ContainerCollection from './ContainerCollection'
 import Container from './Container'
-import {EVENT_PREFIX} from './constants'
+import { EVENT_PREFIX } from './constants'
 
 
 class Layout {

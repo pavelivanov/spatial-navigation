@@ -1,6 +1,6 @@
 import EA from './EventAggregator'
 import ElementCollection from './ElementCollection'
-import {EVENT_PREFIX} from './constants'
+import { EVENT_PREFIX } from './constants'
 
 
 class Container {

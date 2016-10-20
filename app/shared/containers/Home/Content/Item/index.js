@@ -18,7 +18,7 @@ export default class ContentItem extends React.Component {
     const element = new Element(item)
 
     if (disabled) {
-      //element.disable()
+      element.disable()
     }
 
     ContainerCollection.getByName('Content').getElementCollection().add(element)

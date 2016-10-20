@@ -20,7 +20,7 @@ export default class Home extends React.Component {
   }
 
   componentDidMount() {
-    EventAggregator.subscribe('focusContainer', (container) => {
+    EventAggregator.subscribe('sn:focusContainer', (container) => {
       if (container.name == 'Sidebar') {
         this.setState({
           focused: true
@@ -28,7 +28,7 @@ export default class Home extends React.Component {
       }
     })
 
-    EventAggregator.subscribe('blurContainer', (container) => {
+    EventAggregator.subscribe('sn:blurContainer', (container) => {
       if (container.name == 'Sidebar') {
         this.setState({
           focused: false
