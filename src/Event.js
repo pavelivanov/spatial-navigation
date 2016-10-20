@@ -47,7 +47,7 @@ class Event {
       return
     }
 
-    Logger.write(this.name, arguments)
+    Logger.debug(this.name, arguments)
 
     for (let i = 0; i < handlersByPriorities.length; i++) {
       const handlers = handlersByPriorities[i]
