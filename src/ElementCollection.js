@@ -136,27 +136,22 @@ class ElementCollection extends Collection {
   }
 
   getCountInRow() {
-    let count = 0
+    let count = 1
     let offsetLeft = 0
 
-    if (this.length == 0) {
-      count = 1
-    }
-    else {
-      for (let i = 0; i < this.collection.length; i++) {
-        const element = this.collection[i]
+    for (let i = 1; i < this.collection.length; i++) {
+      const element = this.collection[i]
 
-        if (element.domEl.offsetLeft > offsetLeft) {
-          offsetLeft = element.domEl.offsetLeft
-          count++
-        }
-        else {
-          break
-        }
+      if (element.domEl.offsetLeft > offsetLeft) {
+        offsetLeft = element.domEl.offsetLeft
+        count++
+      }
+      else {
+        break
       }
     }
 
-    this.countInRow = count
+    return this.countInRow = count
   }
 
   getRowCount() {
@@ -176,6 +171,8 @@ class ElementCollection extends Collection {
   getNextRowElementIndex() {
     let newElementIndex = this.focusedIndex + this.countInRow
     const isCurrentRowLast = this.isCurrentRowLast()
+
+    //console.log(333, this.focusedIndex, this.countInRow, newElementIndex)
 
     if (newElementIndex > this.length - 1 && !isCurrentRowLast) {
       newElementIndex = this.length - 1
