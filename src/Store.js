@@ -15,11 +15,11 @@ class Store {
   }
   
   bindListeners() {
-    EA.subscribe('pause', () => {
+    EA.subscribe('si:pause', () => {
       this.paused = true
     })
 
-    EA.subscribe('resume', () => {
+    EA.subscribe('si:resume', () => {
       this.paused = false
     })
   }

@@ -16,9 +16,9 @@ class ContainerCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('navigate', ::this.onNavigate, 1)
-    EA.subscribe('focusContainer', ::this.onContainerFocused)
-    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe('si:keypress', ::this.onNavigate, 1)
+    EA.subscribe('si:focusContainer', ::this.onContainerFocused)
+    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
   }
 
   onNavigate(direction) {

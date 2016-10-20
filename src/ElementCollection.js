@@ -19,9 +19,9 @@ class ElementCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('focusContainer', ::this.onContainerFocused)
-    EA.subscribe('navigate', ::this.onNavigate, 2)
-    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe('si:focusContainer', ::this.onContainerFocused)
+    EA.subscribe('si:keypress', ::this.onNavigate, 2)
+    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
   }
 
   add(item, name) {
@@ -29,7 +29,7 @@ class ElementCollection extends Collection {
 
     super.add(item, name)
     this.getCountInRow()
-    EA.dispatchEvent('addElement', this.container)
+    EA.dispatchEvent('si:addElement', this.container)
   }
 
   onContainerFocused(container) {

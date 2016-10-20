@@ -38,19 +38,19 @@ class Element {
   focus() {
     this.domEl.focus()
 
-    EA.dispatchEvent('focusElement', this)
+    EA.dispatchEvent('si:focusElement', this)
   }
 
   onUserFocus() {
     this.focus()
 
-    EA.dispatchEvent('userFocusElement', this)
+    EA.dispatchEvent('si:userFocusElement', this)
   }
 
   blur() {
     this.domEl.blur()
 
-    EA.dispatchEvent('blurElement', this)
+    EA.dispatchEvent('si:blurElement', this)
   }
 
   destroy() {

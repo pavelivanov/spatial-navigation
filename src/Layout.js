@@ -15,7 +15,7 @@ class Layout {
     }
 
     if (opts.startContainerName) {
-      EA.once('addElement', (container) => {
+      EA.once('si:addElement', (container) => {
         if (container.name == opts.startContainerName) {
           container.focus()
           return true

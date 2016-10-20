@@ -22,7 +22,7 @@ class Container {
   }
 
   bindListeners() {
-    EA.subscribe('userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
   }
 
   onUserFocusElement(element) {
@@ -36,13 +36,13 @@ class Container {
   focus() {
     this.focused = true
 
-    EA.dispatchEvent('focusContainer', this)
+    EA.dispatchEvent('si:focusContainer', this)
   }
 
   blur() {
     this.focused = false
 
-    EA.dispatchEvent('blurContainer', this)
+    EA.dispatchEvent('si:blurContainer', this)
   }
 
   getContainerToNavigate(direction) {
