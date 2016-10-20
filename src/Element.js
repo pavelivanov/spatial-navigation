@@ -21,11 +21,11 @@ class Element {
   }
 
   bindListeners() {
-    this.domEl.addEventListener('click', ::this.onUserFocus)
+    this.domEl.addEventListener('click', ::this.onUserClick)
   }
 
   unbindListeners() {
-    this.domEl.removeEventListener('click', ::this.onUserFocus)
+    this.domEl.removeEventListener('click', ::this.onUserClick)
   }
 
   disable() {
@@ -42,7 +42,11 @@ class Element {
     EA.dispatchEvent(`${EVENT_PREFIX}focusElement`, this)
   }
 
-  onUserFocus() {
+  onUserClick() {
+    if (this.disabled) {
+      return
+    }
+
     this.focus()
 
     EA.dispatchEvent(`${EVENT_PREFIX}userFocusElement`, this)
