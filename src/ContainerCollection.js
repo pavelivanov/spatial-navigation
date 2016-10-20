@@ -23,7 +23,6 @@ class ContainerCollection extends Collection {
   }
 
   onNavigate(direction) {
-    console.log(direction);
     const containerNameToNavigate = this.focusedContainer.getContainerToNavigate(direction)
     const containerToNavigate = this.getByName(containerNameToNavigate)
 
