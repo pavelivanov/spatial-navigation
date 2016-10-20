@@ -2,6 +2,7 @@ import EA from './EventAggregator'
 import throttle from './util/throttle'
 import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
+
 class Keyboard {
   constructor() {
     // TODO move outside to dynamically add keys
@@ -24,8 +25,13 @@ class Keyboard {
       }
     }
     this.normalizeMap = {}
-    this.addToMap(this.keyMapping)
+
     this.didMount()
+  }
+
+  didMount() {
+    this.addToMap(this.keyMapping)
+    this.bindListeners()
   }
 
   /**
@@ -36,7 +42,7 @@ class Keyboard {
    */
   static getEventKey(keyCode, modifier) {
     const key = [ keyCode ]
-    
+
     if (modifier instanceof KeyboardEvent) {
       if ((window.navigator.platform.match(/^Mac/) ? modifier.metaKey : modifier.ctrlKey)) {
         key.push('ctrl')
@@ -51,7 +57,7 @@ class Keyboard {
     else if (Boolean(modifier)) {
       key.push(modifier)
     }
-    
+
     return key.join('|')
   }
 
@@ -82,10 +88,6 @@ class Keyboard {
       default:
         return true
     }
-  }
-
-  didMount() {
-    this.bindListeners()
   }
 
   bindListeners() {
