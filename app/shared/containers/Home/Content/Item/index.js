@@ -12,18 +12,28 @@ import Center from 'components/Center'
 @CSSModules(style, { allowMultiple: true })
 export default class ContentItem extends React.Component {
   componentDidMount() {
-    const { containerName } = this.props
+    const { disabled } = this.props
 
-    const element = ReactDOM.findDOMNode(this.refs.element)
+    const item = ReactDOM.findDOMNode(this.refs.item)
+    const element = new Element(item)
 
-    ContainerCollection.getByName('Content').getElementCollection().add(new Element(element))
+    if (disabled) {
+      //element.disable()
+    }
+
+    ContainerCollection.getByName('Content').getElementCollection().add(element)
   }
 
   render() {
-    const { num } = this.props
+    const { num, disabled } = this.props
+
+    const itemStyleName = cx('item', {
+      'disabled': Boolean(disabled)
+    })
+
 
     return (
-      <div ref="element" styleName="item">
+      <div ref="item" styleName={itemStyleName}>
         <Center>
           <div styleName="content">{num}</div>
         </Center>

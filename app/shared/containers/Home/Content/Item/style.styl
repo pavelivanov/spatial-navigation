@@ -1,12 +1,15 @@
 .item
   width: 150px
   height: 100px
-  background-color: rgba(153,153,153, 0.2)
+  background-color: rgba(202, 202, 202, 0.4)
   margin: 10px
   position: relative
   display-inline-block()
+  &.disabled
+    background-color: rgba(153,153,153, 0.1)
   &:focus
     background-color: #fff
+    box-shadow #ff1983 0 0 0 3px inset
     .content
       color #000
 

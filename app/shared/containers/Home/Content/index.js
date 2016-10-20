@@ -14,7 +14,7 @@ export default class Home extends React.Component {
         <div styleName="items">
           {
             Array.apply(null, { length: 25 }).map(Number.call, Number).map((num) => (
-              <Item key={num} num={num} />
+              <Item key={num} num={num} disabled={!Boolean((num + 1) % 5)} />
             ))
           }
         </div>
