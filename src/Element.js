@@ -11,13 +11,13 @@ class Element {
     this.domEl = domEl
     this.disabled = false
 
-    this.didMount()
+    this.designDomEl()
+    this.bindListeners()
   }
-  
-  didMount() {
+
+  designDomEl() {
     this.domEl.setAttribute('tabindex', '-1')
     this.domEl.style.outline = 'none'
-    this.bindListeners()
   }
 
   bindListeners() {

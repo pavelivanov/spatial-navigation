@@ -26,10 +26,6 @@ class Keyboard {
     }
     this.normalizeMap = {}
 
-    this.didMount()
-  }
-
-  didMount() {
     this.addToMap(this.keyMapping)
     this.bindListeners()
   }

@@ -9,10 +9,6 @@ class ContainerCollection extends Collection {
 
     this.focusedContainer = null
 
-    this.didMount()
-  }
-
-  didMount() {
     this.bindListeners()
   }
 

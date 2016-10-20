@@ -1,9 +1,5 @@
 class Mouse {
   constructor() {
-    this.didMount()
-  }
-
-  didMount() {
     this.bindListeners()
   }
 

@@ -12,10 +12,6 @@ class ElementCollection extends Collection {
     this.countInRow = null
     this.currentRowNum = 0
 
-    this.didMount()
-  }
-
-  didMount() {
     this.bindListeners()
   }
 

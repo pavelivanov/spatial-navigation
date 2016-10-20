@@ -4,7 +4,6 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class Container {
-  
   static create(name, map) {
     return new this(name, map)
   }
@@ -17,10 +16,6 @@ class Container {
     this.leaveFor = map || {} // which Container will be focused on leave this Container
     this.enterTo = 'default' // which Element will be focused on enter this Container ( first | last | default )
 
-    this.didMount()
-  }
-
-  didMount() {
     this.bindListeners()
   }
 

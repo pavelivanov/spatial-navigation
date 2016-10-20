@@ -8,13 +8,9 @@ class Store {
   constructor() {
     this.paused = false // if `true` disable listening all keyboard events
     
-    this.didMount()
-  }
-
-  didMount() {
     this.bindListeners()
   }
-  
+
   bindListeners() {
     EA.subscribe(`${EVENT_PREFIX}pause`, () => {
       this.paused = true
