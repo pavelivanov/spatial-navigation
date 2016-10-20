@@ -1,6 +1,5 @@
 import EA from './EventAggregator'
-import Logger from './Logger'
-import {EVENT_PREFIX, KEY_TIMER_INTERVAL} from './constants'
+import {EVENT_PREFIX} from './constants'
 
 class Keyboard {
   constructor() {
@@ -26,10 +25,6 @@ class Keyboard {
     this.normalizeMap = {};
     this.addToMap(this.keyMapping);
     this.didMount()
-    /**
-     * @type {number}
-     */
-    this.timer = null
   }
 
   /**
@@ -62,7 +57,7 @@ class Keyboard {
       }
       this.normalizeMap[Keyboard.getEventKey(mapping[i].keyCode, mapping[i].modifier)] = Object.assign(mapping[i], { name: i })
     }
-    Logger.debug("KeyMap: ", this.normalizeMap)
+    console.log(this.normalizeMap);
   }
 
   /**
@@ -89,15 +84,8 @@ class Keyboard {
 
   bindListeners() {
     document.addEventListener('keydown', ::this.keyPress, false)
-    document.addEventListener('keyup', ::this.keyTimerStop, false)
   }
 
-  keyTimerStop() {
-    if (null !== this.timer) {
-      clearTimeout(this.timer)
-      this.timer = null
-    }
-  }
   keyPress(event) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event);
     if (
@@ -107,10 +95,6 @@ class Keyboard {
     event.preventDefault();
     const eventCode = this.normalizeMap[eventKey].name;
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, eventCode)
-    this.keyTimerStop();
-    this.timer = setTimeout(() => {
-      this.keyPress(event)
-    }, KEY_TIMER_INTERVAL)
   }
 }
 
