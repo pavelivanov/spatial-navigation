@@ -10,8 +10,13 @@ SN.init({
     left: 'Sidebar',
     down: 'Content'
   },
-  'Content': {
+  'Banner': {
     up: 'Search',
+    down: 'Content',
+    left: 'Sidebar'
+  },
+  'Content': {
+    up: 'Banner',
     left: 'Sidebar'
   }
 }, {

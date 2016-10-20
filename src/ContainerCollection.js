@@ -17,20 +17,35 @@ class ContainerCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}keypress`, ::this.onNavigate, 1)
+    EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => this.onNavigate(actionName), 1)
     EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
     EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
   }
 
-  onNavigate(direction) {
-    console.log(direction);
-    const containerNameToNavigate = this.focusedContainer.getContainerToNavigate(direction)
+  onNavigate(direction, focusedContainer = this.focusedContainer) {
+    console.log(`Navigate direction: ${direction}`)
+
+    const containerNameToNavigate = focusedContainer.getContainerToNavigate(direction)
+
+    if (!containerNameToNavigate) {
+      return
+    }
+
     const containerToNavigate = this.getByName(containerNameToNavigate)
 
-    if (containerToNavigate) {
-      this.focusedContainer.blur()
-      containerToNavigate.focus()
+    if (!Boolean(containerToNavigate)) {
+      return
     }
+
+    const elementsNotExist = !Boolean(containerToNavigate.getElementCollection().length)
+    const containerDisabled = containerToNavigate.disabled
+
+    if (elementsNotExist || containerDisabled) {
+      return this.onNavigate(direction, containerToNavigate)
+    }
+
+    this.focusedContainer.blur()
+    containerToNavigate.focus()
   }
 
   onContainerFocused(container) {

@@ -10,6 +10,7 @@ class Container {
   
   constructor(name, map) {
     this.name = name
+    this.disabled = false
     this.focused = false
     this.elements = new ElementCollection(this)
     this.leaveFor = map || {} // which Container will be focused on leave this Container
@@ -32,6 +33,14 @@ class Container {
     }
 
     this.focused = true
+  }
+
+  disable() {
+    this.disabled = true
+  }
+
+  enable() {
+    this.disabled = false
   }
 
   focus() {
