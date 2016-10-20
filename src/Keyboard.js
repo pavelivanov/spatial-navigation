@@ -25,6 +25,7 @@ class Keyboard {
     }
     this.normalizeMap = {}
     this.addToMap(this.keyMapping)
+    this.lastActionName = null
     this.didMount()
   }
 
@@ -92,7 +93,12 @@ class Keyboard {
     document.addEventListener('keydown', throttle(::this.keyPress, EVENT_DELAY), false)
   }
 
-  keyPress(event) {
+  /**
+   *
+   * @param event
+   * @param throttleWrapper
+   */
+  keyPress(event, throttleWrapper) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event)
 
     if (
@@ -103,6 +109,10 @@ class Keyboard {
     event.preventDefault()
 
     const actionName = this.normalizeMap[eventKey].name
+    if ( actionName != this.lastActionName ) {
+      throttleWrapper.throttle()
+    }
+    this.lastActionName = actionName
 
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
   }
