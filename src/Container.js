@@ -4,6 +4,7 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class Container {
+  
   static create(name, map) {
     return new this(name, map)
   }

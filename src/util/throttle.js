@@ -1,42 +1,36 @@
-/**
- * Created by gillbeits on 20/10/2016.
- */
+const throttle = (func, threshold) => {
+  let isFirstCall = true
+  let isThrottled = false
+  let callTimer
 
-export const throttle = function (func, ms) {
-
-  var isThrottled = false,
-    timer,
-    savedArgs,
-    savedThis;
-
-  function wrapper(...args) {
-
-    if (isThrottled) {
-      savedArgs = args;
-      savedThis = this;
-      return;
-    }
-    else {
-      args.push(wrapper)
-    }
-
-    func.apply(this, args);
-
-    isThrottled = true;
-
-    timer = setTimeout(function() {
-      isThrottled = false;
-      if (savedArgs) {
-        wrapper.apply(savedThis, savedArgs);
-        savedArgs = savedThis = null;
-      }
-    }, ms);
-  }
-
-  wrapper.__proto__.throttle = function () {
+  const clearVariables = () => {
+    isFirstCall = true
     isThrottled = false
-    clearTimeout(timer)
   }
 
-  return wrapper;
+  // there is ~250ms delay between first and second call and ~35ms after
+  const wrapper = function (...args) {
+    if (isFirstCall) {
+      isFirstCall = false
+      func.call(this, ...args)
+    }
+
+    if (!isThrottled) {
+      isThrottled = true
+
+      callTimer = setTimeout(() => {
+        isThrottled = false
+        func.call(this, ...args)
+      }, threshold)
+    }
+  }
+
+  wrapper.__proto__.finish = () => {
+    clearVariables()
+    clearTimeout(callTimer)
+  }
+
+  return wrapper
 }
+
+export default throttle

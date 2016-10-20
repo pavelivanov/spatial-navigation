@@ -1,5 +1,5 @@
 import EA from './EventAggregator'
-import { throttle } from './util/throttle'
+import throttle from './util/throttle'
 import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
 class Keyboard {
@@ -25,7 +25,6 @@ class Keyboard {
     }
     this.normalizeMap = {}
     this.addToMap(this.keyMapping)
-    this.lastActionName = null
     this.didMount()
   }
 
@@ -90,15 +89,13 @@ class Keyboard {
   }
 
   bindListeners() {
-    document.addEventListener('keydown', throttle(::this.keyPress, EVENT_DELAY), false)
+    const thr = throttle(::this.keyPress, EVENT_DELAY)
+
+    document.addEventListener('keydown', thr)
+    document.addEventListener('keyup', thr.finish)
   }
 
-  /**
-   *
-   * @param event
-   * @param throttleWrapper
-   */
-  keyPress(event, throttleWrapper) {
+  keyPress(event) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event)
 
     if (
@@ -109,10 +106,6 @@ class Keyboard {
     event.preventDefault()
 
     const actionName = this.normalizeMap[eventKey].name
-    if ( actionName != this.lastActionName ) {
-      throttleWrapper.throttle()
-    }
-    this.lastActionName = actionName
 
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
   }
