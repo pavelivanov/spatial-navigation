@@ -1,6 +1,6 @@
 import Collection from './Collection'
 import EA from './EventAggregator'
-import {EVENT_PREFIX} from './constants'
+import { EVENT_PREFIX } from './constants'
 
 
 class ElementCollection extends Collection {
@@ -22,7 +22,8 @@ class ElementCollection extends Collection {
   bindListeners() {
     EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
     EA.subscribe(`${EVENT_PREFIX}keypress`, ::this.onNavigate, 2)
-    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onFocusElement)
   }
 
   add(item, name) {
@@ -68,7 +69,7 @@ class ElementCollection extends Collection {
     element.focus()
   }
 
-  onUserFocusElement(element) {
+  onFocusElement(element) {
     if (this.container != element.container) { // check element belongs to this collection
       return
     }
@@ -93,43 +94,35 @@ class ElementCollection extends Collection {
     }
   }
 
-  getElementToNavigate(direction) {
+  getElementToNavigate(direction, focusedIndex = this.focusedIndex) {
     let element
 
     this.getCountInRow()
     this.getCurrentRowNum()
 
     if (direction == 'up') {
-      const newElementIndex = this.getPrevRowElementIndex()
-      element = this.getByIndex(newElementIndex)
-
-      if (element) {
-        this.focusedIndex = newElementIndex
-      }
+      focusedIndex = this.getPrevRowElementIndex(focusedIndex)
+      element = this.getByIndex(focusedIndex)
     }
     else if (direction == 'down') {
-      const newElementIndex = this.getNextRowElementIndex()
-      element = this.getByIndex(newElementIndex)
-
-      if (element) {
-        this.focusedIndex = newElementIndex
-      }
+      focusedIndex = this.getNextRowElementIndex(focusedIndex)
+      element = this.getByIndex(focusedIndex)
     }
     else if (direction == 'left') {
       const isFocusedFirstInRow = this.isFocusedFirstInRow()
-      element = isFocusedFirstInRow ? null : this.getByIndex(this.focusedIndex - 1)
-
-      if (element) {
-        this.focusedIndex = --this.focusedIndex
-      }
+      element = isFocusedFirstInRow ? null : this.getByIndex(--focusedIndex)
     }
     else if (direction == 'right') {
       const isFocusedLastInRow = this.isFocusedLastInRow()
-      element = isFocusedLastInRow ? null : this.getByIndex(this.focusedIndex + 1)
+      element = isFocusedLastInRow ? null : this.getByIndex(++focusedIndex)
+    }
 
-      if (element) {
-        this.focusedIndex = ++this.focusedIndex
-      }
+    if (element && element.disabled) {
+      return this.getElementToNavigate(direction, focusedIndex)
+    }
+
+    if (element) {
+      this.focusedIndex = focusedIndex
     }
 
     return element
@@ -164,15 +157,13 @@ class ElementCollection extends Collection {
     return this.currentRowNum
   }
 
-  getPrevRowElementIndex() {
-    return this.focusedIndex - this.countInRow
+  getPrevRowElementIndex(focusedIndex = this.focusedIndex) {
+    return focusedIndex - this.countInRow
   }
 
-  getNextRowElementIndex() {
-    let newElementIndex = this.focusedIndex + this.countInRow
+  getNextRowElementIndex(focusedIndex = this.focusedIndex) {
+    let newElementIndex = focusedIndex + this.countInRow
     const isCurrentRowLast = this.isCurrentRowLast()
-
-    //console.log(333, this.focusedIndex, this.countInRow, newElementIndex)
 
     if (newElementIndex > this.length - 1 && !isCurrentRowLast) {
       newElementIndex = this.length - 1
