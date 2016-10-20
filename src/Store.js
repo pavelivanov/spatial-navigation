@@ -1,4 +1,5 @@
 import EA from './EventAggregator'
+import {EVENT_PREFIX} from './constants'
 
 
 // Use as @decorator on other components to enhance state
@@ -15,11 +16,11 @@ class Store {
   }
   
   bindListeners() {
-    EA.subscribe('si:pause', () => {
+    EA.subscribe(`${EVENT_PREFIX}pause`, () => {
       this.paused = true
     })
 
-    EA.subscribe('si:resume', () => {
+    EA.subscribe(`${EVENT_PREFIX}resume`, () => {
       this.paused = false
     })
   }

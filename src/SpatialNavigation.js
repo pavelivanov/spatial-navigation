@@ -1,7 +1,6 @@
 import Keyboard from './Keyboard'
 import Layout from './Layout'
 
-
 class SpatialNavigation {
   constructor() {
     this.keyboard = null

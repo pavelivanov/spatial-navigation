@@ -1,5 +1,5 @@
 import EA from './EventAggregator'
-
+import {EVENT_PREFIX} from './constants'
 
 class Keyboard {
   constructor() {
@@ -43,6 +43,8 @@ class Keyboard {
       } else if (modifier.altKey) {
         key.push('alt')
       }
+    } else if (Boolean(modifier)) {
+      key.push(modifier)
     }
     return key.join('|')
   }
@@ -55,6 +57,7 @@ class Keyboard {
       }
       this.normalizeMap[Keyboard.getEventKey(mapping[i].keyCode, mapping[i].modifier)] = Object.assign(mapping[i], { name: i })
     }
+    console.log(this.normalizeMap);
   }
 
   /**
@@ -91,7 +94,7 @@ class Keyboard {
     ) return;
     event.preventDefault();
     const eventCode = this.normalizeMap[eventKey].name;
-    EA.dispatchEvent('si:keypress', eventCode)
+    EA.dispatchEvent(`${EVENT_PREFIX}keypress`, eventCode)
   }
 }
 

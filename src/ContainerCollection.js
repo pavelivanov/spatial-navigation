@@ -1,5 +1,6 @@
 import Collection from './Collection'
 import EA from './EventAggregator'
+import {EVENT_PREFIX} from './constants'
 
 
 class ContainerCollection extends Collection {
@@ -16,12 +17,13 @@ class ContainerCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('si:keypress', ::this.onNavigate, 1)
-    EA.subscribe('si:focusContainer', ::this.onContainerFocused)
-    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}keypress`, ::this.onNavigate, 1)
+    EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
+    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
   }
 
   onNavigate(direction) {
+    console.log(direction);
     const containerNameToNavigate = this.focusedContainer.getContainerToNavigate(direction)
     const containerToNavigate = this.getByName(containerNameToNavigate)
 

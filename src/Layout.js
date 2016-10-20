@@ -1,6 +1,7 @@
 import EA from './EventAggregator'
 import ContainerCollection from './ContainerCollection'
 import Container from './Container'
+import {EVENT_PREFIX} from './constants'
 
 
 class Layout {
@@ -15,7 +16,7 @@ class Layout {
     }
 
     if (opts.startContainerName) {
-      EA.once('si:addElement', (container) => {
+      EA.once(`${EVENT_PREFIX}addElement`, (container) => {
         if (container.name == opts.startContainerName) {
           container.focus()
           return true

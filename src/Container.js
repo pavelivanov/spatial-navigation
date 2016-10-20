@@ -1,5 +1,6 @@
 import EA from './EventAggregator'
 import ElementCollection from './ElementCollection'
+import {EVENT_PREFIX} from './constants'
 
 
 class Container {
@@ -22,7 +23,7 @@ class Container {
   }
 
   bindListeners() {
-    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
   }
 
   onUserFocusElement(element) {
@@ -36,13 +37,13 @@ class Container {
   focus() {
     this.focused = true
 
-    EA.dispatchEvent('si:focusContainer', this)
+    EA.dispatchEvent(`${EVENT_PREFIX}focusContainer`, this)
   }
 
   blur() {
     this.focused = false
 
-    EA.dispatchEvent('si:blurContainer', this)
+    EA.dispatchEvent(`${EVENT_PREFIX}blurContainer`, this)
   }
 
   getContainerToNavigate(direction) {

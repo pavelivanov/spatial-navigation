@@ -1,4 +1,5 @@
 import EA from './EventAggregator'
+import {EVENT_PREFIX} from './constants'
 
 
 class Element {
@@ -38,19 +39,19 @@ class Element {
   focus() {
     this.domEl.focus()
 
-    EA.dispatchEvent('si:focusElement', this)
+    EA.dispatchEvent(`${EVENT_PREFIX}focusElement`, this)
   }
 
   onUserFocus() {
     this.focus()
 
-    EA.dispatchEvent('si:userFocusElement', this)
+    EA.dispatchEvent(`${EVENT_PREFIX}userFocusElement`, this)
   }
 
   blur() {
     this.domEl.blur()
 
-    EA.dispatchEvent('si:blurElement', this)
+    EA.dispatchEvent(`${EVENT_PREFIX}blurElement`, this)
   }
 
   destroy() {

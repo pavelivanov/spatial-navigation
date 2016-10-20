@@ -1,5 +1,6 @@
 import Collection from './Collection'
 import EA from './EventAggregator'
+import {EVENT_PREFIX} from './constants'
 
 
 class ElementCollection extends Collection {
@@ -19,9 +20,9 @@ class ElementCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe('si:focusContainer', ::this.onContainerFocused)
-    EA.subscribe('si:keypress', ::this.onNavigate, 2)
-    EA.subscribe('si:userFocusElement', ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
+    EA.subscribe(`${EVENT_PREFIX}keypress`, ::this.onNavigate, 2)
+    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
   }
 
   add(item, name) {
@@ -29,7 +30,7 @@ class ElementCollection extends Collection {
 
     super.add(item, name)
     this.getCountInRow()
-    EA.dispatchEvent('si:addElement', this.container)
+    EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.container)
   }
 
   onContainerFocused(container) {
