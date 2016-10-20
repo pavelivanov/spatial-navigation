@@ -1,5 +1,5 @@
 {
-  "name": "dribbbles",
+  "name": "spatial-navigation-like-youtubetv-app",
   "scripts": {
     "dev": "node ./bin/server",
     "clean": "rimraf build",
