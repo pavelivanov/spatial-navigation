@@ -21,43 +21,48 @@ class Keyboard {
         keyCode: 70,
         modifier: 'ctrl'
       }
-    };
-    this.normalizeMap = {};
-    this.addToMap(this.keyMapping);
+    }
+    this.normalizeMap = {}
+    this.addToMap(this.keyMapping)
     this.didMount()
   }
 
   /**
    *
    * @param keyCode
-   * @param {string|KeyboardEvent}modifier
+   * @param {string|KeyboardEvent} modifier - cmdKey, ctrlKey
    * @returns {string}
    */
   static getEventKey(keyCode, modifier) {
-    let key = [keyCode];
+    const key = [ keyCode ]
+    
     if (modifier instanceof KeyboardEvent) {
       if ((window.navigator.platform.match(/^Mac/) ? modifier.metaKey : modifier.ctrlKey)) {
         key.push('ctrl')
-      } else if (modifier.shiftKey) {
+      }
+      else if (modifier.shiftKey) {
         key.push('shift')
-      } else if (modifier.altKey) {
+      }
+      else if (modifier.altKey) {
         key.push('alt')
       }
-    } else if (Boolean(modifier)) {
+    }
+    else if (Boolean(modifier)) {
       key.push(modifier)
     }
+    
     return key.join('|')
   }
 
   addToMap(mapping) {
-    for (let i in mapping) {
-      let eventKey = Keyboard.getEventKey(mapping[i].keyCode, mapping[i].modifier);
+    for (let actionName in mapping) {
+      let eventKey = Keyboard.getEventKey(mapping[actionName].keyCode, mapping[actionName].modifier)
       if (Boolean(this.normalizeMap[eventKey])) {
-        throw new Error(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${i}`);
+        throw new Error(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${actionName}`)
       }
-      this.normalizeMap[Keyboard.getEventKey(mapping[i].keyCode, mapping[i].modifier)] = Object.assign(mapping[i], { name: i })
+      this.normalizeMap[eventKey] = Object.assign(mapping[actionName], { name: actionName })
     }
-    console.log(this.normalizeMap);
+    console.log(this.normalizeMap)
   }
 
   /**
@@ -68,13 +73,13 @@ class Keyboard {
   static getModifier(event, modifier) {
     switch (modifier) {
       case 'ctrl':
-        return (window.navigator.platform.match(/^Mac/) ? event.metaKey : event.ctrlKey);
+        return (window.navigator.platform.match(/^Mac/) ? event.metaKey : event.ctrlKey)
       case 'shift':
-        return event.shiftKey;
+        return event.shiftKey
       case 'alt':
-        return event.altKey;
+        return event.altKey
       default:
-        return true;
+        return true
     }
   }
 
@@ -87,14 +92,18 @@ class Keyboard {
   }
 
   keyPress(event) {
-    const eventKey = Keyboard.getEventKey(event.keyCode, event);
+    const eventKey = Keyboard.getEventKey(event.keyCode, event)
+
     if (
       !Boolean(eventKey in this.normalizeMap)
       || !Boolean(Keyboard.getModifier(event, this.normalizeMap[eventKey].modifier))
-    ) return;
-    event.preventDefault();
-    const eventCode = this.normalizeMap[eventKey].name;
-    EA.dispatchEvent(`${EVENT_PREFIX}keypress`, eventCode)
+    ) return
+
+    event.preventDefault()
+
+    const actionName = this.normalizeMap[eventKey].name
+
+    EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
   }
 }
 

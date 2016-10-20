@@ -49,15 +49,13 @@ class ElementCollection extends Collection {
       this.focusedIndex = elementIndex = 0
     }
     else {
-      switch(this.enterTo) {
+      switch (this.enterTo) {
         case 'first':
           elementIndex = 0
           break
-
         case 'last':
           elementIndex = this.length - 1
           break
-
         default:
           elementIndex = this.focusedIndex
           break
@@ -100,21 +98,26 @@ class ElementCollection extends Collection {
     this.getCountInRow()
     this.getCurrentRowNum()
 
-    if (direction == 'up') {
-      focusedIndex = this.getPrevRowElementIndex(focusedIndex)
-      element = this.getByIndex(focusedIndex)
-    }
-    else if (direction == 'down') {
-      focusedIndex = this.getNextRowElementIndex(focusedIndex)
-      element = this.getByIndex(focusedIndex)
-    }
-    else if (direction == 'left') {
-      const isFocusedFirstInRow = this.isFocusedFirstInRow()
-      element = isFocusedFirstInRow ? null : this.getByIndex(--focusedIndex)
-    }
-    else if (direction == 'right') {
-      const isFocusedLastInRow = this.isFocusedLastInRow()
-      element = isFocusedLastInRow ? null : this.getByIndex(++focusedIndex)
+    switch (direction) {
+      case 'up':
+        focusedIndex = this.getPrevRowElementIndex(focusedIndex)
+        element = this.getByIndex(focusedIndex)
+        break
+
+      case 'down':
+        focusedIndex = this.getNextRowElementIndex(focusedIndex)
+        element = this.getByIndex(focusedIndex)
+        break
+
+      case 'left':
+        const isFocusedFirstInRow = this.isFocusedFirstInRow()
+        element = isFocusedFirstInRow ? null : this.getByIndex(--focusedIndex)
+        break
+
+      case 'right':
+        const isFocusedLastInRow = this.isFocusedLastInRow()
+        element = isFocusedLastInRow ? null : this.getByIndex(++focusedIndex)
+        break
     }
 
     if (element && element.disabled) {
@@ -151,9 +154,9 @@ class ElementCollection extends Collection {
     return Math.ceil(this.length / this.countInRow)
   }
 
-  getCurrentRowNum() {
+  getCurrentRowNum(focusedIndex = this.focusedIndex) {
     // ductape: if focused first element in row then this.focusedIndex % this.countInRow == 0
-    this.currentRowNum = Math.ceil((this.focusedIndex + (this.isFocusedFirstInRow() ? 1 : 0)) / this.countInRow)
+    this.currentRowNum = Math.ceil((focusedIndex + (this.isFocusedFirstInRow(focusedIndex) ? 1 : 0)) / this.countInRow)
     return this.currentRowNum
   }
 
@@ -163,25 +166,28 @@ class ElementCollection extends Collection {
 
   getNextRowElementIndex(focusedIndex = this.focusedIndex) {
     let newElementIndex = focusedIndex + this.countInRow
-    const isCurrentRowLast = this.isCurrentRowLast()
+    const isCurrentRowLast = this.isCurrentRowLast(focusedIndex)
 
-    if (newElementIndex > this.length - 1 && !isCurrentRowLast) {
+    if (isCurrentRowLast) {
+      return null
+    }
+    else if (newElementIndex > this.length - 1) {
       newElementIndex = this.length - 1
     }
 
     return newElementIndex
   }
 
-  isCurrentRowLast() {
-    return this.getRowCount() == 1 || this.getCurrentRowNum() == this.getRowCount()
+  isCurrentRowLast(focusedIndex = this.focusedIndex) {
+    return this.getRowCount() == 1 || this.getCurrentRowNum(focusedIndex) == this.getRowCount()
   }
 
-  isFocusedFirstInRow() {
-    return !Boolean(this.focusedIndex % this.countInRow)
+  isFocusedFirstInRow(focusedIndex = this.focusedIndex) {
+    return !Boolean(focusedIndex % this.countInRow)
   }
 
-  isFocusedLastInRow() {
-    return this.focusedIndex == this.length - 1 || !Boolean((this.focusedIndex + 1) % this.countInRow)
+  isFocusedLastInRow(focusedIndex = this.focusedIndex) {
+    return focusedIndex == this.length - 1 || !Boolean((focusedIndex + 1) % this.countInRow)
   }
 }
 
