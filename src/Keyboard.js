@@ -1,5 +1,6 @@
 import EA from './EventAggregator'
-import { EVENT_PREFIX } from './constants'
+import { throttle } from './util/throttle'
+import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
 class Keyboard {
   constructor() {
@@ -88,7 +89,7 @@ class Keyboard {
   }
 
   bindListeners() {
-    document.addEventListener('keydown', ::this.keyPress, false)
+    document.addEventListener('keydown', throttle(::this.keyPress, EVENT_DELAY), false)
   }
 
   keyPress(event) {

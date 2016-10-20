@@ -1,5 +1,5 @@
 import EA from './EventAggregator'
-import { EVENT_PREFIX } from './constants'
+import { EVENT_PREFIX } from './util/constants'
 
 
 // Use as @decorator on other components to enhance state
