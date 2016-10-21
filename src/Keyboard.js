@@ -10,10 +10,6 @@ class Keyboard {
     this.bindListeners()
   }
 
-  isActionExists(name) {
-    return Boolean(this.actionToKeyMapping[name]);
-  }
-
   /**
    *
    * @param keyCode
@@ -111,7 +107,7 @@ class Keyboard {
   }
 
   bindListeners() {
-    const thr = Keyboard.throttle(::this.keyPress, EVENT_DELAY, Keyboard.getEventKey)
+    const thr = Keyboard.throttle(::this.keyPress, EVENT_DELAY)
 
     document.addEventListener('keydown', thr)
     document.addEventListener('keyup', thr.finish)
