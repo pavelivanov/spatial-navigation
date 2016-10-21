@@ -3,23 +3,34 @@ import EA from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
 
 
+let focusedContainer
+
 class ContainerCollection extends Collection {
   constructor() {
     super()
-
-    this.focusedContainer = null
 
     this.bindListeners()
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => this.onNavigate(actionName), 1)
-    EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
-    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}navigate`, ::this.onNavigate, 1)
+    EA.subscribe(`${EVENT_PREFIX}focusContainer`, ContainerCollection.setFocusedContainer)
+    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ContainerCollection.setFocusedContainer)
   }
 
-  onNavigate(direction, focusedContainer = this.focusedContainer) {
-    const containerNameToNavigate = focusedContainer.getContainerToNavigate(direction)
+  onNavigate(direction, dispatchedEvent) {
+    const containerToNavigate = this.getContainerToNavigate(direction)
+
+    if (!Boolean(containerToNavigate)) {
+      return
+    }
+
+    //dispatchedEvent.stopPropagation()
+    containerToNavigate.focus()
+  }
+
+  getContainerToNavigate(direction, container = focusedContainer) {
+    const containerNameToNavigate = fContainer.getContainerToNavigate(direction)
 
     if (!containerNameToNavigate) {
       return
@@ -35,21 +46,27 @@ class ContainerCollection extends Collection {
     const containerDisabled = containerToNavigate.disabled
 
     if (elementsNotExist || containerDisabled) {
-      return this.onNavigate(direction, containerToNavigate)
+      return this.getContainerToNavigate(direction, containerToNavigate)
     }
 
-    this.focusedContainer.blur()
-    containerToNavigate.focus()
+    return container
   }
 
-  onContainerFocused(container) {
-    this.focusedContainer = container
+  static setFocusedContainer = (container) => {
+    if (focusedContainer) {
+      focusedContainer.blur()
+    }
+
+    focusedContainer = container
   }
 
-  onUserFocusElement(element) {
-    this.focusedContainer.blur()
-    this.focusedContainer = element.container
+  static getFocusedContainer = () => {
+    return focusedContainer
   }
 }
 
 export default new ContainerCollection
+
+export {
+  ContainerCollection
+}

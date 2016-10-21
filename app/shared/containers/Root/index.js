@@ -14,7 +14,7 @@ const actionToKeyMapping = {
   down: {
     keyCode: 40
   },
-  cancel: {
+  esc: {
     keyCode: 27
   },
   tab: {

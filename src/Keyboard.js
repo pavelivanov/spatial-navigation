@@ -43,12 +43,15 @@ class Keyboard {
 
   addToMap(mapping) {
     for (let actionName in mapping) {
-      let eventKey = Keyboard.getEventKey(mapping[actionName].keyCode, mapping[actionName].modifier)
+      const eventKey = Keyboard.getEventKey(mapping[actionName].keyCode, mapping[actionName].modifier)
+      
       if (Boolean(this.normalizeMap[eventKey])) {
         throw new Error(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${actionName}`)
       }
+      
       this.normalizeMap[eventKey] = Object.assign(mapping[actionName], { name: actionName })
     }
+    
     this.actionToKeyMapping = Object.assign(this.actionToKeyMapping, mapping)
   }
 
@@ -121,18 +124,24 @@ class Keyboard {
    */
   keyPress(event) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event)
-    // Logger.debug(eventKey)
+    //Logger.debug(eventKey)
 
     if (
       !Boolean(eventKey in this.normalizeMap)
       || !Boolean(Keyboard.getModifier(event, this.normalizeMap[eventKey].modifier))
-    ) return
+    ) {
+      return true
+    }
 
     event.preventDefault()
 
     const actionName = this.normalizeMap[eventKey].name
 
+    if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
+      EA.dispatchEvent(`${EVENT_PREFIX}navigate`, actionName)
+    }
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
+    EA.dispatchEvent(`${EVENT_PREFIX}${actionName}`)
 
     return true
   }

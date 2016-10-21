@@ -1,5 +1,5 @@
 import EA from './EventAggregator'
-import ContainerCollection from './ContainerCollection'
+import { ContainerCollection } from './ContainerCollection'
 import Keyboard from './Keyboard'
 import { EVENT_PREFIX } from './util/constants'
 
@@ -34,25 +34,27 @@ class Element {
     Keyboard.addToMap(mapping)
 
     EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
-      const fucusedContainer = ContainerCollection.focusedContainer
+      const focusedContainer = ContainerCollection.getFocusedContainer()
 
-      for (let keyAction in mapping) {
-        if (keyAction == actionName && this.container != fucusedContainer) {
-          const { event, handler } = EA.subscribe(`${EVENT_PREFIX}keypress`, (cancelAction) => {
-            if (cancelAction == 'cancel' && this.container.focused) {
-              fucusedContainer.focus()
-            }
-          })
+      if (!Boolean(actionName in mapping)) {
+        return
+      }
 
-          EA.once(`${EVENT_PREFIX}blurContainer`, (container) => {
-            if (this.container == container) {
-              event.removeHandler(handler)
-              return true
-            }
-          })
+      if (this.container != focusedContainer) {
+        const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
+          if (this.container.focused) {
+            focusedContainer.focus()
+          }
+        })
 
-          this.onUserClick()
-        }
+        EA.once(`${EVENT_PREFIX}blurContainer`, (container) => {
+          if (this.container == container) {
+            event.removeHandler(handler)
+            return true
+          }
+        })
+
+        this.focus()
       }
     })
 

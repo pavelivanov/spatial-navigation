@@ -10,8 +10,6 @@ import style from './style'
 @CSSModules(style)
 export default class HeaderSearch extends React.Component {
   componentDidMount() {
-    const { containerName } = this.props
-
     const reactElement = ReactDOM.findDOMNode(this.refs.input)
     const element = new Element(reactElement)
 
@@ -24,6 +22,7 @@ export default class HeaderSearch extends React.Component {
         keyCode: 70
       }
     })
+    
     ContainerCollection.getByName('Search').getElementCollection().add(element)
   }
 

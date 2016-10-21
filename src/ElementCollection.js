@@ -17,7 +17,7 @@ class ElementCollection extends Collection {
 
   bindListeners() {
     EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
-    EA.subscribe(`${EVENT_PREFIX}keypress`, ::this.onNavigate, 2)
+    EA.subscribe(`${EVENT_PREFIX}navigate`, ::this.onNavigate, 2)
     EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onFocusElement)
     EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onFocusElement)
   }
@@ -76,6 +76,8 @@ class ElementCollection extends Collection {
       return
     }
 
+    console.log(111, direction, this.container.name)
+
     if (!Boolean(this.length)) { // check if there are elements in container
       return
     }
@@ -103,6 +105,7 @@ class ElementCollection extends Collection {
       case 'down':
         focusedIndex = this.getNextRowElementIndex(focusedIndex)
         element = this.getByIndex(focusedIndex)
+        console.log(222, direction, this.container.name)
         break
 
       case 'left':
