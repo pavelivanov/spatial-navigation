@@ -1,8 +1,5 @@
-/**
- * Created by gillbeits on 21/10/2016.
- */
-
 const aggregation = (baseClass, ...mixins) => {
+
   let base = class _Combined extends baseClass {
     constructor (...args) {
       super(...args)
@@ -11,6 +8,7 @@ const aggregation = (baseClass, ...mixins) => {
       })
     }
   }
+
   let copyProps = (target, source) => {
     Object.getOwnPropertyNames(source)
       .concat(Object.getOwnPropertySymbols(source))
@@ -20,10 +18,12 @@ const aggregation = (baseClass, ...mixins) => {
         Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop))
       })
   }
+
   mixins.forEach((mixin) => {
     copyProps(base.prototype, mixin.prototype)
     copyProps(base, mixin)
   })
+
   return base
 }
 
