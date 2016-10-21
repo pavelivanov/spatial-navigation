@@ -137,7 +137,7 @@ class Keyboard {
 
     const actionName = this.normalizeMap[eventKey].name
 
-    if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
+    if (~[ 'up', 'down', 'left', 'right' ].find(action => action == actionName)) {
       EA.dispatchEvent(`${EVENT_PREFIX}navigate`, actionName)
     }
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)

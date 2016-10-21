@@ -26,7 +26,7 @@ class Logger {
       'info',
       'warn',
       'error'
-    ].indexOf(strLevel.toLowerCase())
+    ].find(level => level == strLevel.toLowerCase())
   }
 
   /**

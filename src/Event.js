@@ -33,7 +33,12 @@ class Event {
     if (!Boolean(priority in this.handlers)) {
       this.handlers[String(priority)] = []
     }
-    return this.handlers[priority].splice(this.handlers[priority].indexOf(handler), 1);
+
+    const handlerIndex = this.handlers[priority].indexOf(handler)
+
+    if (~handlerIndex) {
+      return this.handlers[priority].splice(handlerIndex, 1);
+    }
   }
 
   call(eventArgs) {
