@@ -76,8 +76,6 @@ class ElementCollection extends Collection {
       return
     }
 
-    console.log(111, direction, this.container.name)
-
     if (!Boolean(this.length)) { // check if there are elements in container
       return
     }
@@ -105,7 +103,6 @@ class ElementCollection extends Collection {
       case 'down':
         focusedIndex = this.getNextRowElementIndex(focusedIndex)
         element = this.getByIndex(focusedIndex)
-        console.log(222, direction, this.container.name)
         break
 
       case 'left':

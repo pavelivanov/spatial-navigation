@@ -1,7 +1,7 @@
 class Collection {
   constructor() {
     this.collection = []
-    this.collectionIds = null
+    this.collectionIds = {}
   }
 
   add(item, name) {
