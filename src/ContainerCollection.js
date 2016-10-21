@@ -19,8 +19,6 @@ class ContainerCollection extends Collection {
   }
 
   onNavigate(direction, focusedContainer = this.focusedContainer) {
-    console.log(`Navigate direction: ${direction}`)
-
     const containerNameToNavigate = focusedContainer.getContainerToNavigate(direction)
 
     if (!containerNameToNavigate) {

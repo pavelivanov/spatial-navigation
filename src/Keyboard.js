@@ -1,33 +1,17 @@
 import EA from './EventAggregator'
-import throttle from './util/throttle'
+import Logger from './Logger'
 import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
 
 class Keyboard {
   constructor() {
-    // TODO move outside to dynamically add keys
-    this.keyMapping = {
-      left: {
-        keyCode: 37
-      },
-      up: {
-        keyCode: 38
-      },
-      right: {
-        keyCode: 39
-      },
-      down: {
-        keyCode: 40
-      },
-      search: {
-        keyCode: 70,
-        modifier: 'ctrl'
-      }
-    }
+    this.actionToKeyMapping = {}
     this.normalizeMap = {}
-
-    this.addToMap(this.keyMapping)
     this.bindListeners()
+  }
+
+  isActionExists(name) {
+    return Boolean(this.actionToKeyMapping[name]);
   }
 
   /**
@@ -38,7 +22,7 @@ class Keyboard {
    */
   static getEventKey(keyCode, modifier) {
     const key = [ keyCode ]
-
+    
     if (modifier instanceof KeyboardEvent) {
       if ((window.navigator.platform.match(/^Mac/) ? modifier.metaKey : modifier.ctrlKey)) {
         key.push('ctrl')
@@ -53,7 +37,7 @@ class Keyboard {
     else if (Boolean(modifier)) {
       key.push(modifier)
     }
-
+    
     return key.join('|')
   }
 
@@ -65,7 +49,7 @@ class Keyboard {
       }
       this.normalizeMap[eventKey] = Object.assign(mapping[actionName], { name: actionName })
     }
-    console.log(this.normalizeMap)
+    this.actionToKeyMapping = Object.assign(this.actionToKeyMapping, mapping)
   }
 
   /**
@@ -86,15 +70,58 @@ class Keyboard {
     }
   }
 
+  static throttle = (func, threshold) => {
+    let id = null
+    let isThrottled = false
+    let callTimer
+
+    const clearVariables = () => {
+      id = null
+      isThrottled = false
+    }
+
+    /**
+     * @param {KeyboardEvent} event
+     */
+    const wrapper = function (event) {
+      const eventKey = Keyboard.getEventKey(event.keyCode, event)
+      if (id != eventKey || eventKey.match(/\|/)) {
+        func.call(this, event)
+        id = eventKey
+      }
+
+      if (!isThrottled) {
+        isThrottled = true
+
+        callTimer = setTimeout(() => {
+          isThrottled = !func.call(this, event)
+        }, threshold)
+      }
+    }
+
+    wrapper.__proto__.finish = () => {
+      clearVariables()
+      clearTimeout(callTimer)
+    }
+
+    return wrapper
+  }
+
   bindListeners() {
-    const thr = throttle(::this.keyPress, EVENT_DELAY)
+    const thr = Keyboard.throttle(::this.keyPress, EVENT_DELAY, Keyboard.getEventKey)
 
     document.addEventListener('keydown', thr)
     document.addEventListener('keyup', thr.finish)
   }
 
+  /**
+   *
+   * @param {KeyboardEvent} event
+   * @returns {boolean}
+   */
   keyPress(event) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event)
+    // Logger.debug(eventKey)
 
     if (
       !Boolean(eventKey in this.normalizeMap)
@@ -106,6 +133,8 @@ class Keyboard {
     const actionName = this.normalizeMap[eventKey].name
 
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
+
+    return true
   }
 }
 

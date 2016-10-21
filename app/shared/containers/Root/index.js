@@ -1,23 +1,58 @@
 import React from 'react'
-
 import SN from 'SN'
+
+const actionToKeyMapping = {
+  left: {
+    keyCode: 37
+  },
+  up: {
+    keyCode: 38
+  },
+  right: {
+    keyCode: 39
+  },
+  down: {
+    keyCode: 40
+  },
+  cancel: {
+    keyCode: 27
+  },
+  tab: {
+    keyCode: 9
+  }
+}
+
+SN.Keyboard.addToMap(actionToKeyMapping)
 
 SN.init({
   'Sidebar': {
-    right: 'Content'
+    map: {
+      right: 'Content'
+    },
+    bind: {
+      s: {
+        keyCode: 83
+      }
+    }
   },
   'Search': {
-    left: 'Sidebar',
-    down: 'Content'
+    map: {
+      left: 'Sidebar',
+      down: 'Content'
+    }
   },
   'Banner': {
-    up: 'Search',
-    down: 'Content',
-    left: 'Sidebar'
+    map: {
+      up: 'Search',
+      down: 'Content',
+      left: 'Sidebar'
+    }
   },
   'Content': {
-    up: 'Banner',
-    left: 'Sidebar'
+    map: {
+      up: 'Banner',
+      left: 'Sidebar'
+    }
   }
 }, {
   startContainerName: 'Content'

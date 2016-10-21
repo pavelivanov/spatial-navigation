@@ -1,4 +1,6 @@
 import EA from './EventAggregator'
+import ContainerCollection from './ContainerCollection'
+import Keyboard from './Keyboard'
 import { EVENT_PREFIX } from './util/constants'
 
 
@@ -10,6 +12,10 @@ class Element {
   constructor(domEl) {
     this.domEl = domEl
     this.disabled = false
+    /**
+     * @type {null|Container}
+     */
+    this.container = null
 
     this.designDomEl()
     this.bindListeners()
@@ -22,6 +28,35 @@ class Element {
 
   bindListeners() {
     this.domEl.addEventListener('click', ::this.onUserClick)
+  }
+
+  bindKeyAction(mapping) {
+    Keyboard.addToMap(mapping)
+
+    EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
+      const fucusedContainer = ContainerCollection.focusedContainer
+
+      for (let keyAction in mapping) {
+        if (keyAction == actionName && this.container != fucusedContainer) {
+          const { event, handler } = EA.subscribe(`${EVENT_PREFIX}keypress`, (cancelAction) => {
+            if (cancelAction == 'cancel' && this.container.focused) {
+              fucusedContainer.focus()
+            }
+          })
+
+          EA.once(`${EVENT_PREFIX}blurContainer`, (container) => {
+            if (this.container == container) {
+              event.removeHandler(handler)
+              return true
+            }
+          })
+
+          this.onUserFocus()
+        }
+      }
+    })
+
+    return this
   }
 
   unbindListeners() {

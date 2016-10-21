@@ -9,15 +9,19 @@ class Layout {
     this.containers = ContainerCollection
   }
 
-  init(map, opts) {
-    for (const containerName in map) {
-      const container = Container.create(containerName, map[containerName])
+  init(options, setting) {
+    for (const containerName in options) {
+      const container = Container.create(containerName, options[containerName].map)
       this.containers.add(container, containerName)
+
+      if (Boolean(options[containerName].bind)) {
+        container.bindKeyAction(options[containerName].bind)
+      }
     }
 
-    if (opts.startContainerName) {
+    if (setting.startContainerName) {
       EA.once(`${EVENT_PREFIX}addElement`, (container) => {
-        if (container.name == opts.startContainerName) {
+        if (container.name == setting.startContainerName) {
           container.focus()
           return true
         }

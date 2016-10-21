@@ -29,14 +29,11 @@ class Event {
     this.handlers[String(priority)].push(handler)
   }
 
-  // TODO refactor (priority key)
-  removeHandler(handler) {
-    for (let i = 0; i < this.handlers.length; i++) {
-      if (this.handlers[i] == handler) {
-        this.handlers.splice(i, 1)
-        break
-      }
+  removeHandler(handler, priority = 1) {
+    if (!Boolean(priority in this.handlers)) {
+      this.handlers[String(priority)] = []
     }
+    return this.handlers[priority].splice(this.handlers[priority].indexOf(handler), 1);
   }
 
   call(eventArgs) {
@@ -46,8 +43,6 @@ class Event {
     if (!Boolean(handlersByPriorities.length)) {
       return
     }
-
-    Logger.debug(this.name, arguments)
 
     for (let i = 0; i < handlersByPriorities.length; i++) {
       const handlers = handlersByPriorities[i]

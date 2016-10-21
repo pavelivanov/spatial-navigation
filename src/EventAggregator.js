@@ -21,6 +21,13 @@ class EventAggregator {
     event.call(...eventArgs)
   }
 
+  /**
+   *
+   * @param eventName
+   * @param handler
+   * @param priority
+   * @returns {{event: *, handler: *}}
+   */
   subscribe(eventName, handler, priority) {
     let event = this.getEvent(eventName)
 
@@ -30,8 +37,16 @@ class EventAggregator {
     }
 
     event.addHandler(handler, priority)
+    return { event, handler }
   }
 
+  /**
+   *
+   * @param eventName
+   * @param handler
+   * @param priority
+   * @returns {{event: *, handlerWrapper: (function(...[*]))}}
+   */
   once(eventName, handler, priority) {
     let event = this.getEvent(eventName)
 
@@ -40,19 +55,15 @@ class EventAggregator {
       this.events.push(event)
     }
 
-    event.addHandler((...args) => {
+    const handlerWrapper = (...args) => {
       const result = handler(...args)
       if (result) {
-        for (let i = 0; i < this.events.length; i++) {
-          const _event = this.events[i]
-
-          if (_event == event) {
-            this.events.splice(i, 1)
-            break
-          }
-        }
+        event.removeHandler(handlerWrapper, priority)
       }
-    }, priority)
+    }
+    event.addHandler(handlerWrapper, priority)
+
+    return { event, handlerWrapper }
   }
 }
 

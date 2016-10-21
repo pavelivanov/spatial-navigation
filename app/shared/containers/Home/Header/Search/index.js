@@ -12,9 +12,19 @@ export default class HeaderSearch extends React.Component {
   componentDidMount() {
     const { containerName } = this.props
 
-    const element = ReactDOM.findDOMNode(this.refs.input)
+    const reactElement = ReactDOM.findDOMNode(this.refs.input)
+    const element = new Element(reactElement)
 
-    ContainerCollection.getByName('Search').getElementCollection().add(new Element(element))
+    element.bindKeyAction({
+      search: {
+        keyCode: 70,
+        modifier: 'ctrl'
+      },
+      f: {
+        keyCode: 70
+      }
+    })
+    ContainerCollection.getByName('Search').getElementCollection().add(element)
   }
 
   render() {
