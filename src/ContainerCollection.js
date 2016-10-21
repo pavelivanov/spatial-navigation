@@ -30,7 +30,7 @@ class ContainerCollection extends Collection {
   }
 
   getContainerToNavigate(direction, container = focusedContainer) {
-    const containerNameToNavigate = fContainer.getContainerToNavigate(direction)
+    const containerNameToNavigate = container.getContainerToNavigate(direction)
 
     if (!containerNameToNavigate) {
       return
@@ -49,7 +49,7 @@ class ContainerCollection extends Collection {
       return this.getContainerToNavigate(direction, containerToNavigate)
     }
 
-    return container
+    return containerToNavigate
   }
 
   static setFocusedContainer = (container) => {
