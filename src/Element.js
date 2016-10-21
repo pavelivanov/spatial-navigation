@@ -51,7 +51,7 @@ class Element {
             }
           })
 
-          this.onUserFocus()
+          this.onUserClick()
         }
       }
     })
