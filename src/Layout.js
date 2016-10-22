@@ -9,7 +9,7 @@ class Layout {
     this.containers = ContainerCollection
   }
 
-  init(options, setting) {
+  init(options) {
     for (const containerName in options) {
       const container = Container.create(containerName, options[containerName].map)
       this.containers.add(container, containerName)
