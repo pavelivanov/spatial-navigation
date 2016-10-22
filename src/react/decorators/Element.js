@@ -15,9 +15,16 @@ const withElement = ({ keyBindings = {} } = {}) => {
       }
 
       handleChildRef = (component) => {
+        const { state, props } = component
+
         const container = this.context.container
         const domEl = ReactDOM.findDOMNode(component)
         const element = new Element(domEl)
+
+        const disabled = state && state.disabled || props && props.disabled
+        if (disabled) {
+          element.disable()
+        }
 
         element.bindKeyAction(keyBindings)
         container.getElementCollection().add(element)
