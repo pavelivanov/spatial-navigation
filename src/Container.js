@@ -15,7 +15,7 @@ class Container {
   static create(name, map) {
     return new this(name, map)
   }
-  
+
   constructor(name, map) {
     this.name = name
     this.disabled = false
@@ -29,6 +29,7 @@ class Container {
 
   bindListeners() {
     EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
+    EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onUserFocusElement)
   }
 
   bindKeyAction(mapping) {

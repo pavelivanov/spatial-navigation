@@ -34,41 +34,6 @@ const actionToKeyMapping = {
 
 SN.Keyboard.addToMap(actionToKeyMapping)
 
-SN.init({
-  'Sidebar': {
-    map: {
-      right: 'Content'
-    },
-    bind: {
-      s: {
-        keyCode: 83
-      }
-    }
-  },
-  'Search': {
-    map: {
-      left: 'Sidebar',
-      down: 'Content'
-    }
-  },
-  'Banner': {
-    map: {
-      up: 'Search',
-      down: 'Content',
-      left: 'Sidebar'
-    }
-  },
-  'Content': {
-    map: {
-      up: 'Banner',
-      left: 'Sidebar'
-    }
-  }
-}, {
-  startContainerName: 'Content'
-})
-
-
 const history = browserHistory
 
 ReactDOM.render(

@@ -17,17 +17,17 @@ class Layout {
       if (Boolean(options[containerName].bind)) {
         container.bindKeyAction(options[containerName].bind)
       }
-    }
 
-    if (setting.startContainerName) {
-      EA.once(`${EVENT_PREFIX}addElement`, (container) => {
-        if (container.name == setting.startContainerName) {
-          container.focus()
-          return true
-        }
+      if (Boolean(options[containerName].settings.startContainer)) {
+        EA.once(`${EVENT_PREFIX}addElement`, (container) => {
+          if (container.name == containerName) {
+            container.focus()
+            return true
+          }
 
-        return false
-      })
+          return false
+        })
+      }
     }
   }
 }

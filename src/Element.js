@@ -8,7 +8,7 @@ class Element {
   static create(domEl) {
     return new this(domEl)
   }
-  
+
   constructor(domEl) {
     this.domEl = domEl
     this.disabled = false
@@ -42,6 +42,7 @@ class Element {
 
       if (this.container != focusedContainer) {
         const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
+          console.log(this.container.focused)
           if (this.container.focused) {
             focusedContainer.focus()
           }
@@ -68,11 +69,11 @@ class Element {
   disable() {
     this.disabled = true
   }
-  
+
   enable() {
     this.disabled = false
   }
-  
+
   focus() {
     this.domEl.focus()
 
