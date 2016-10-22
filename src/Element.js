@@ -42,7 +42,6 @@ class Element {
 
       if (this.container != focusedContainer) {
         const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
-          console.log(this.container.focused)
           if (this.container.focused) {
             focusedContainer.focus()
           }
