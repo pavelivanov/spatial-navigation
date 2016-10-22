@@ -20,7 +20,7 @@ class Container {
     this.name = name
     this.disabled = false
     this.focused = false
-    this.elements = new ElementCollection(this)
+    this.collection = new ElementCollection(this)
     this.leaveFor = map || {} // which Container will be focused on leave this Container
     this.enterTo = 'default' // which Element will be focused on enter this Container ( first | last | default )
 
@@ -36,6 +36,7 @@ class Container {
     Keyboard.addToMap(mapping)
 
     EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
+      // TODO remove `getFocusedContainer`
       const focusedContainer = ContainerCollection.getFocusedContainer()
 
       if (!Boolean(actionName in mapping)) {
@@ -81,13 +82,12 @@ class Container {
 
   focus() {
     this.focused = true
-
+    this.collection.focus()
     EA.dispatchEvent(`${EVENT_PREFIX}focusContainer`, this)
   }
 
   blur() {
     this.focused = false
-
     EA.dispatchEvent(`${EVENT_PREFIX}blurContainer`, this)
   }
 
@@ -95,8 +95,8 @@ class Container {
     return this.leaveFor[direction]
   }
 
-  getElementCollection() {
-    return this.elements
+  getCollection() {
+    return this.collection
   }
 }
 

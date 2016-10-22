@@ -27,7 +27,7 @@ const withElement = ({ keyBindings = {} } = {}) => {
         }
 
         element.bindKeyAction(keyBindings)
-        container.getElementCollection().add(element)
+        container.getCollection().add(element)
       }
 
       render() {

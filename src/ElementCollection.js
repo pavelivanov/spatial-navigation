@@ -1,13 +1,14 @@
 import Collection from './Collection'
 import EA from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
+import Container from './Container'
 
 
 class ElementCollection extends Collection {
-  constructor(container) {
+  constructor(parent) {
     super()
 
-    this.container = container
+    this.parent = parent
     this.focusedIndex = null
     this.countInRow = null
     this.currentRowNum = 0
@@ -16,27 +17,21 @@ class ElementCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}focusContainer`, ::this.onContainerFocused)
-    EA.subscribe(`${EVENT_PREFIX}navigate`, ::this.onNavigate, 2)
     EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onFocusElement)
     EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onFocusElement)
   }
 
   add(item, name) {
-    item.container = this.container
+    item.parent = this.parent
 
     super.add(item, name)
     this.getCountInRow()
-    EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.container)
+    EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
   }
 
-  onContainerFocused(container) {
-    if (this.container != container) {
-      return
-    }
-
-    if (!Boolean(this.length)) {
-      return
+  focus() {
+    if (this.parent instanceof Container && !Boolean(this.length)) {
+      throw Error(`You must add at least one element to each container. Check ${this.parent.name} container`)
     }
 
     let elementIndex
@@ -64,31 +59,14 @@ class ElementCollection extends Collection {
   }
 
   onFocusElement(element) {
-    if (this.container != element.container) { // check element belongs to this collection
+    if (this.parent != element.parent) { // check element belongs to this collection
       return
     }
 
     this.focusedIndex = this.indexOf(element)
   }
 
-  onNavigate(direction, dispatchedEvent) {
-    if (!this.container.focused) { // check if dispatched this container
-      return
-    }
-
-    if (!Boolean(this.length)) { // check if there are elements in container
-      return
-    }
-
-    const elementToNavigate = this.getElementToNavigate(direction)
-
-    if (elementToNavigate) {
-      dispatchedEvent.stopPropagation()
-      elementToNavigate.focus()
-    }
-  }
-
-  getElementToNavigate(direction, focusedIndex = this.focusedIndex) {
+  getInstanceToFocus(direction, focusedIndex = this.focusedIndex) {
     let element
 
     this.getCountInRow()
@@ -117,7 +95,7 @@ class ElementCollection extends Collection {
     }
 
     if (element && element.disabled) {
-      return this.getElementToNavigate(direction, focusedIndex)
+      return this.getInstanceToFocus(direction, focusedIndex)
     }
 
     if (element) {

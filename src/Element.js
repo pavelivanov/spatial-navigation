@@ -1,5 +1,6 @@
 import EA from './EventAggregator'
 import { ContainerCollection } from './ContainerCollection'
+import ElementCollection from './ElementCollection'
 import Keyboard from './Keyboard'
 import { EVENT_PREFIX } from './util/constants'
 
@@ -15,7 +16,8 @@ class Element {
     /**
      * @type {null|Container}
      */
-    this.container = null
+    this.parent = null
+    this.collection = null
 
     this.designDomEl()
     this.bindListeners()
@@ -34,21 +36,22 @@ class Element {
     Keyboard.addToMap(mapping)
 
     EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
+      // TODO remove `getFocusedContainer`
       const focusedContainer = ContainerCollection.getFocusedContainer()
 
       if (!Boolean(actionName in mapping)) {
         return
       }
 
-      if (this.container != focusedContainer) {
+      if (this.parent != focusedContainer) {
         const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
-          if (this.container.focused) {
+          if (this.parent.focused) {
             focusedContainer.focus()
           }
         })
 
-        EA.once(`${EVENT_PREFIX}blurContainer`, (container) => {
-          if (this.container == container) {
+        EA.once(`${EVENT_PREFIX}blurContainer`, (parent) => {
+          if (this.parent == parent) {
             event.removeHandler(handler)
             return true
           }
@@ -93,6 +96,10 @@ class Element {
     this.domEl.blur()
 
     EA.dispatchEvent(`${EVENT_PREFIX}blurElement`, this)
+  }
+
+  getCollection() {
+    return this.collection
   }
 
   destroy() {

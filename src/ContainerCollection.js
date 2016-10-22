@@ -13,23 +13,11 @@ class ContainerCollection extends Collection {
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}navigate`, ::this.onNavigate, 1)
     EA.subscribe(`${EVENT_PREFIX}focusContainer`, ContainerCollection.setFocusedContainer)
     EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ContainerCollection.setFocusedContainer)
   }
 
-  onNavigate(direction, dispatchedEvent) {
-    const containerToNavigate = this.getContainerToNavigate(direction)
-
-    if (!Boolean(containerToNavigate)) {
-      return
-    }
-
-    //dispatchedEvent.stopPropagation()
-    containerToNavigate.focus()
-  }
-
-  getContainerToNavigate(direction, container = focusedContainer) {
+  getInstanceToFocus(direction, container) {
     const containerNameToNavigate = container.getContainerToNavigate(direction)
 
     if (!containerNameToNavigate) {
@@ -42,11 +30,11 @@ class ContainerCollection extends Collection {
       return
     }
 
-    const elementsNotExist = !Boolean(containerToNavigate.getElementCollection().length)
+    const elementsNotExist = !Boolean(containerToNavigate.getCollection().length)
     const containerDisabled = containerToNavigate.disabled
 
     if (elementsNotExist || containerDisabled) {
-      return this.getContainerToNavigate(direction, containerToNavigate)
+      return this.getInstanceToFocus(direction, containerToNavigate)
     }
 
     return containerToNavigate
