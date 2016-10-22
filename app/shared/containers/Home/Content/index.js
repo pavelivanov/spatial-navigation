@@ -4,7 +4,7 @@ import { SNReact } from 'SN'
 import CSSModules from 'react-css-modules'
 import style from './style'
 
-import Item from './Item'
+import Section from './Section'
 
 
 @SNReact.Decorators.Container('Content', {
@@ -16,13 +16,11 @@ export default class Home extends React.Component {
   render() {
     return (
       <div styleName="content">
-        <div styleName="items">
-          {
-            Array.apply(null, { length: 25 }).map(Number.call, Number).map((num) => (
-              <Item key={num} num={num} disabled={!Boolean((num + 1) % 5)} />
-            ))
-          }
-        </div>
+        {
+          Array.apply(null, { length: 10 }).map(Number.call, Number).map((index) => (
+            <Section key={index} index={index} disabled={!Boolean((index + 1) % 5)} />
+          ))
+        }
       </div>
     )
   }

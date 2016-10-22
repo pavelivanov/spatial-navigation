@@ -1,9 +1,7 @@
 import EA from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
-import aggregation from './util/aggregation'
 import ContainerCollection from './ContainerCollection'
 import Container from './Container'
-import Element from './Element'
 
 
 class Navigation {

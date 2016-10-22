@@ -10,9 +10,9 @@ import Center from 'components/Center'
 
 @SNReact.Decorators.Element()
 @CSSModules(style, { allowMultiple: true })
-export default class ContentItem extends React.Component {
+export default class ContentSectionItem extends React.Component {
   render() {
-    const { num, disabled } = this.props
+    const { index, disabled } = this.props
 
     const itemStyleName = cx('item', {
       'disabled': Boolean(disabled)
@@ -21,7 +21,7 @@ export default class ContentItem extends React.Component {
     return (
       <div styleName={itemStyleName}>
         <Center>
-          <div styleName="content">{num}</div>
+          <div styleName="content">{index + 1}</div>
         </Center>
       </div>
     )

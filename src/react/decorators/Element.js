@@ -11,23 +11,37 @@ const withElement = ({ keyBindings = {} } = {}) => {
       static displayName = "SN:Element"
 
       static contextTypes = {
-        container: React.PropTypes.instanceOf(Container).isRequired,
+        container: React.PropTypes.instanceOf(Container),
+        element: React.PropTypes.instanceOf(Element),
+      }
+      
+      constructor() {
+        super()
+
+        this.element = new Element
       }
 
       handleChildRef = (component) => {
         const { state, props } = component
 
-        const container = this.context.container
+        const ctxParent = this.context.element || this.context.container
         const domEl = ReactDOM.findDOMNode(component)
-        const element = new Element(domEl)
+
+        this.element.connectDomEl(domEl)
+        this.element.bindKeyAction(keyBindings)
 
         const disabled = state && state.disabled || props && props.disabled
         if (disabled) {
-          element.disable()
+          this.element.disable()
         }
 
-        element.bindKeyAction(keyBindings)
-        container.getCollection().add(element)
+        ctxParent.getCollection().add(this.element)
+      }
+
+      getChildContext() {
+        return {
+          element: this.element,
+        }
       }
 
       render() {
@@ -39,6 +53,10 @@ const withElement = ({ keyBindings = {} } = {}) => {
           />
         )
       }
+    }
+
+    SNElementComponent.childContextTypes = {
+      element: React.PropTypes.instanceOf(Element)
     }
 
     return SNElementComponent
