@@ -9,10 +9,6 @@ class SpatialNavigation {
     this.Mouse = Mouse
     this.Layout = Layout
   }
-
-  init(map, opts = {}) {
-    this.Layout.init(map, opts)
-  }
 }
 
 export default new SpatialNavigation

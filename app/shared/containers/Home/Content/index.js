@@ -1,13 +1,16 @@
 import React from 'react'
+import { SNReact } from 'SN'
 
 import CSSModules from 'react-css-modules'
 import style from './style'
 
 import Item from './Item'
 
-import { SNReact } from 'SN'
 
-@SNReact.Decorators.Container( "Content", { up: 'Search', left: 'Sidebar' }, {}, { startContainer: true } )
+@SNReact.Decorators.Container('Content', {
+  map: { up: 'Search', left: 'Sidebar' },
+  startContainer: true,
+})
 @CSSModules(style)
 export default class Home extends React.Component {
   render() {

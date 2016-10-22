@@ -1,6 +1,3 @@
-/**
- * Created by gillbeits on 21/10/2016.
- */
 import React from 'react'
 import EA from '../../EventAggregator'
 import ContainerCollection from '../../ContainerCollection'
@@ -8,15 +5,15 @@ import Container from '../../Container'
 import { EVENT_PREFIX } from '../../util/constants'
 
 
-const withContainer = (containerName, map = {}, keyBindings = {}, settings = {}) => {
+const withContainer = (containerName, { map = {}, keyBindings = {}, ...settings }) => {
   return (ComposedComponent) => {
 
-    const SNContainerComponent = class extends React.Component {
-
+    class SNContainerComponent extends React.Component {
       static displayName = "SN:Container"
 
       constructor() {
         super()
+
         if (!ContainerCollection.isExists(containerName)) {
           ContainerCollection.add(Container.create(containerName, map), containerName)
         }
@@ -45,7 +42,7 @@ const withContainer = (containerName, map = {}, keyBindings = {}, settings = {})
 
       getChildContext() {
         return {
-            container: this.container,
+          container: this.container,
         }
       }
 

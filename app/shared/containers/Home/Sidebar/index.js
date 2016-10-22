@@ -8,7 +8,11 @@ import style from './style'
 
 import Navig from './Navig'
 
-@SNReact.Decorators.Container( "Sidebar", { right: 'Content' }, { s: { keyCode: 83 } } )
+
+@SNReact.Decorators.Container('Sidebar', {
+  map: { right: 'Content' },
+  keyBindings: { s: { keyCode: 83 } },
+})
 @CSSModules(style, { allowMultiple: true })
 export default class Home extends React.Component {
   constructor() {

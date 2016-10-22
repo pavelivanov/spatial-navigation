@@ -1,17 +1,14 @@
-/**
- * Created by gillbeits on 21/10/2016.
- */
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Container from '../../Container'
 import Element from '../../Element'
 
 
-const withElement = (keyBindings = {}) => {
-
+const withElement = ({ keyBindings = {} } = {}) => {
   return (ComposedComponent) => {
 
-    const SNElementComponent = class extends React.Component {
+    class SNElementComponent extends React.Component {
+      static displayName = "SN:Element"
 
       static contextTypes = {
         container: React.PropTypes.instanceOf(Container).isRequired,
@@ -37,10 +34,7 @@ const withElement = (keyBindings = {}) => {
       }
     }
 
-    SNElementComponent.displayName = "SN:Element"
-
     return SNElementComponent
-
   }
 }
 

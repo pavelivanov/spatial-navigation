@@ -7,7 +7,9 @@ import style from './style'
 import Search from './Search'
 
 
-@SNReact.Decorators.Container( "Search", { left: 'Sidebar', down: 'Content' })
+@SNReact.Decorators.Container('Search', {
+  map: { left: 'Sidebar', down: 'Content' },
+})
 @CSSModules(style)
 export default class Header extends React.Component {
   render() {
