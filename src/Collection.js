@@ -22,8 +22,17 @@ class Collection {
     return this.collection[index]
   }
 
+  /**
+   *
+   * @param name
+   * @returns {*}
+   */
   getByName(name) {
     return this.collection[this.collectionIds[name]]
+  }
+
+  isExists(name) {
+    return Boolean(this.getByName(name))
   }
 
   get length() {

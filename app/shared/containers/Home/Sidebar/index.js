@@ -1,14 +1,14 @@
 import React from 'react'
 import cx from 'classnames'
 import Icon from 'react-fa'
-import { EventAggregator } from 'SN'
+import { EventAggregator, SNReact } from 'SN'
 
 import CSSModules from 'react-css-modules'
 import style from './style'
 
 import Navig from './Navig'
 
-
+@SNReact.Decorators.Container("Sidebar")
 @CSSModules(style, { allowMultiple: true })
 export default class Home extends React.Component {
   constructor() {
@@ -36,8 +36,7 @@ export default class Home extends React.Component {
       }
     })
   }
-  
-  
+
   render() {
     const { focused } = this.state
 

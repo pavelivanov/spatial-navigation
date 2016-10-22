@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules'
 import style from './style'
 
 
-@SNReact.ElementDecorator('Search', {
+@SNReact.Decorators.Element({
   search: {
     keyCode: 70,
     modifier: 'ctrl'

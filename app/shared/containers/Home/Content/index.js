@@ -5,7 +5,9 @@ import style from './style'
 
 import Item from './Item'
 
+import { SNReact } from 'SN'
 
+@SNReact.Decorators.Container("Content", { 'content': { keyCode: 67 } })
 @CSSModules(style)
 export default class Home extends React.Component {
   render() {
