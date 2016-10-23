@@ -12,7 +12,7 @@ import Center from 'components/Center'
 @CSSModules(style, { allowMultiple: true })
 export default class ContentSectionItem extends React.Component {
   render() {
-    const { index, disabled } = this.props
+    const { sectionIndex, index, disabled } = this.props
 
     const itemStyleName = cx('item', {
       'disabled': Boolean(disabled)
@@ -21,7 +21,7 @@ export default class ContentSectionItem extends React.Component {
     return (
       <div styleName={itemStyleName}>
         <Center>
-          <div styleName="content">{index + 1}</div>
+          <div styleName="content">{sectionIndex + index + 1}</div>
         </Center>
       </div>
     )

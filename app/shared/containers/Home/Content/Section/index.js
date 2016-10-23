@@ -14,17 +14,19 @@ const spaceBetweenSections = 10
 @CSSModules(style)
 export default class ContentSection extends React.Component {
   render() {
-    const { index } = this.props
+    const { index: sectionIndex, focusedSectionIndex } = this.props
+
+    const translateY = (sectionIndex - focusedSectionIndex) * (sectionHeight + spaceBetweenSections)
 
     const styles = {
-      transform: `translateY(${index * (sectionHeight + spaceBetweenSections)}px) translateZ(0px) translateX(0%) scale(1)`
+      transform: `translateY(${translateY}px) translateZ(0px) translateX(0%) scale(1)`
     }
 
     return (
       <div styleName="section" style={styles}>
         {
           Array.apply(null, { length: 25 }).map(Number.call, Number).map((index) => (
-            <Item key={index} index={index} disabled={!Boolean((index + 1) % 5)} />
+            <Item key={index} sectionIndex={sectionIndex * 25} index={index} disabled={!Boolean((index + 1) % 5)} />
           ))
         }
       </div>

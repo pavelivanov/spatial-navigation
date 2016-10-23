@@ -1,5 +1,5 @@
 import Collection from './Collection'
-import EA from './EventAggregator'
+import EA, { EventAggregator } from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
 
 
@@ -10,6 +10,7 @@ class ContainerCollection extends Collection {
     super()
 
     this.bindListeners()
+    this.eventAggregator = new EventAggregator()
   }
 
   bindListeners() {

@@ -32,6 +32,15 @@ class Navigation {
       return
     }
 
+    if (instanceToFocus.collection) {
+      instanceToFocus.collection.eventAggregator.dispatchEvent('navigate', 1111)
+
+      // TODO rewrite - add method to get Container from parents
+      if (instance.parent instanceof Container) {
+        instanceToFocus.parent.collection.eventAggregator.dispatchEvent('navigate', 2222)
+      }
+    }
+
     instanceToFocus.focus()
   }
 

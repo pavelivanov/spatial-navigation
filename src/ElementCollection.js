@@ -1,5 +1,5 @@
 import Collection from './Collection'
-import EA from './EventAggregator'
+import EA, { EventAggregator } from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
 import Container from './Container'
 
@@ -12,6 +12,7 @@ class ElementCollection extends Collection {
     this.focusedIndex = null
     this.countInRow = null
     this.currentRowNum = 0
+    this.eventAggregator = new EventAggregator()
 
     this.bindListeners()
   }

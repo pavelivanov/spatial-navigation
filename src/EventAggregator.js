@@ -68,3 +68,7 @@ class EventAggregator {
 }
 
 export default new EventAggregator
+
+export {
+  EventAggregator
+}

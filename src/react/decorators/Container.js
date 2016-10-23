@@ -38,6 +38,10 @@ const withContainer = (containerName, { map = {}, keyBindings = {}, ...settings 
             return false
           })
         }
+
+        this.state = {
+          SNContainer: this.container
+        }
       }
 
       getChildContext() {
