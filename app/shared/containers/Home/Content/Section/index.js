@@ -10,36 +10,35 @@ import Item from './Item'
 
 
 const sectionHeight = 200
-const spaceBetweenSections = 10
+const spaceBetweenSections = 20
 const itemWidth = 220
-const spaceBetweenItems = 10
+const spaceBetweenItems = 20
 
 const shiftItems = (sectionWrapper, section) => {
   let prevFocusedIndex = 0
+  let sectionCurrMarginLeft = 0
 
   return (focusedIndex) => {
     const contentWrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
     const focusedElm = section.childNodes[focusedIndex]
     const direction = focusedIndex > prevFocusedIndex ? 'right' : 'left'
 
-    const sectionWrapperWidth = sectionWrapper.offsetWidth
-    const centringOffsetLeft = (sectionWrapperWidth - itemWidth) / 2
-    const focusedElmOffsetLeft = focusedElm.offsetLeft
-    const sectionMarginLeft = parseInt(section.style.marginLeft)
+    const sectionWrapperWidth   = sectionWrapper.offsetWidth
+    const centringOffsetLeft    = (sectionWrapperWidth - itemWidth) / 2
+    const focusedElmOffsetLeft  = focusedElm.offsetLeft
+    let sectionNewMarginLeft
 
-    if (!sectionMarginLeft) {
-      section.style.marginLeft = '0px'
-    }
-
-    if (focusedElmOffsetLeft > centringOffsetLeft || Math.abs(sectionMarginLeft) > centringOffsetLeft) {
-      section.style.marginLeft = sectionMarginLeft + centringOffsetLeft - focusedElmOffsetLeft + 'px'
+    if (focusedElmOffsetLeft > centringOffsetLeft || Math.abs(sectionCurrMarginLeft) > centringOffsetLeft) {
+      sectionNewMarginLeft = sectionCurrMarginLeft + centringOffsetLeft - focusedElmOffsetLeft
+      section.style.marginLeft = sectionNewMarginLeft + 'px'
     }
     else {
-      section.style.marginLeft = '0px'
+      sectionNewMarginLeft = 0
+      section.style.marginLeft = sectionNewMarginLeft + 'px'
     }
 
     contentWrapper.scrollLeft = 0
-
+    sectionCurrMarginLeft = sectionNewMarginLeft
     prevFocusedIndex = focusedIndex
   }
 }
