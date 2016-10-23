@@ -84,6 +84,7 @@ class Keyboard {
      */
     const wrapper = function (event) {
       const eventKey = Keyboard.getEventKey(event.keyCode, event)
+      
       if (id != eventKey || eventKey.match(/\|/)) {
         func.call(this, event)
         id = eventKey

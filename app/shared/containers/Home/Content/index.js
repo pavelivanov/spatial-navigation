@@ -48,42 +48,40 @@ export default class Home extends React.Component {
     super()
 
     this.state = {
-      sections: null
+      sections: Array.apply(null, {length: 10}).map(() => Array.apply(null, {length: 15}).map(Number.call, Number))
     }
   }
 
-  componentWillMount() {
-    const xmlHttp = new XMLHttpRequest()
-
-    xmlHttp.onreadystatechange = () => {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200 && xmlHttp.response) {
-        const cardSet = []
-        const cards = JSON.parse(xmlHttp.response).slice(0, 250)
-
-        cards.forEach((card, index) => {
-          if (!Boolean(index % 25)) {
-            cardSet.push([])
-          }
-
-          cardSet[cardSet.length - 1].push(card)
-        })
-
-        this.setState({
-          sections: cardSet
-        })
-      }
-    }
-
-    xmlHttp.open('GET', 'https://jsonplaceholder.typicode.com/photos', false)
-    xmlHttp.send(null)
-  }
+  // componentWillMount() {
+  //   const xmlHttp = new XMLHttpRequest()
+  //
+  //   xmlHttp.onreadystatechange = () => {
+  //     if (xmlHttp.readyState == 4 && xmlHttp.status == 200 && xmlHttp.response) {
+  //       const cardSet = []
+  //       const cards = JSON.parse(xmlHttp.response).slice(0, 150)
+  //
+  //       cards.forEach((card, index) => {
+  //         if (!Boolean(index % 15)) {
+  //           cardSet.push([])
+  //         }
+  //
+  //         cardSet[cardSet.length - 1].push(card)
+  //       })
+  //
+  //       this.setState({
+  //         sections: cardSet
+  //       })
+  //     }
+  //   }
+  //
+  //   xmlHttp.open('GET', 'https://jsonplaceholder.typicode.com/photos', false)
+  //   xmlHttp.send(null)
+  // }
 
   componentDidMount() {
     const { SNContainer: { collection } } = this.props
 
-    collection.eventAggregator.subscribe('onNavigate', () => {
-      shiftSections(collection.focusedIndex)
-    })
+    collection.eventAggregator.subscribe('onNavigate', () => shiftSections(collection.focusedIndex))
   }
 
   render() {

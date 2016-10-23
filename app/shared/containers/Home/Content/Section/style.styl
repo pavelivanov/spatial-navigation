@@ -1,4 +1,4 @@
-.section
+.wrapper
   width: 100%
   height: 200px
   position: absolute
@@ -7,4 +7,8 @@
   transition all 0.23s, -webkit-transform 0.23s
   &:global(.hiddenSection)
     opacity 0
-    transform translateY(-11%) translateZ(0px) translateX(-2%) scale(0.75)
+    transform translateY(10%) translateZ(-10px) scale(0.75)
+
+.section
+  height: 100%
+  transition margin-left 0.23s

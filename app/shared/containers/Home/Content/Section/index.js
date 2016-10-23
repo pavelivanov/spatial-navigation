@@ -1,39 +1,47 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { SNReact } from 'SN'
 
 import CSSModules from 'react-css-modules'
-import style from './style'
 import contentStyle from '../style'
+import style from './style'
 
 import Item from './Item'
 
 
 const sectionHeight = 200
 const spaceBetweenSections = 10
-
-let prevFocusedIndex = 0
 const itemWidth = 220
 const spaceBetweenItems = 10
 
-const shiftItems = (focusedIndex) => {
-  const wrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
-  const section = document.getElementsByClassName(style.section)[0]
-  const direction = focusedIndex > prevFocusedIndex ? 'right' : 'left'
+const shiftItems = (sectionWrapper, section) => {
+  let prevFocusedIndex = 0
 
-  if (!section.style.marginLeft) {
-    section.style.marginLeft = '0px'
+  return (focusedIndex) => {
+    const contentWrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
+    const focusedElm = section.childNodes[focusedIndex]
+    const direction = focusedIndex > prevFocusedIndex ? 'right' : 'left'
+
+    const sectionWrapperWidth = sectionWrapper.offsetWidth
+    const centringOffsetLeft = (sectionWrapperWidth - itemWidth) / 2
+    const focusedElmOffsetLeft = focusedElm.offsetLeft
+    const sectionMarginLeft = parseInt(section.style.marginLeft)
+
+    if (!sectionMarginLeft) {
+      section.style.marginLeft = '0px'
+    }
+
+    if (focusedElmOffsetLeft > centringOffsetLeft || Math.abs(sectionMarginLeft) > centringOffsetLeft) {
+      section.style.marginLeft = sectionMarginLeft + centringOffsetLeft - focusedElmOffsetLeft + 'px'
+    }
+    else {
+      section.style.marginLeft = '0px'
+    }
+
+    contentWrapper.scrollLeft = 0
+
+    prevFocusedIndex = focusedIndex
   }
-
-  if (direction == 'right') {
-    section.style.marginLeft = parseInt(section.style.marginLeft) - (itemWidth + spaceBetweenItems) + 'px'
-  }
-  else {
-    section.style.marginLeft = parseInt(section.style.marginLeft) + (itemWidth + spaceBetweenItems) + 'px'
-  }
-
-  wrapper.scrollLeft = 0
-
-  prevFocusedIndex = focusedIndex
 }
 
 
@@ -51,9 +59,11 @@ export default class ContentSection extends React.Component {
   componentDidMount() {
     const { SNElement: { collection } } = this.props
 
-    collection.eventAggregator.subscribe('onNavigate', () => {
-      shiftItems(collection.focusedIndex)
-    })
+    const wrapper = ReactDOM.findDOMNode(this.refs.wrapper)
+    const section = ReactDOM.findDOMNode(this.refs.section)
+
+    const method = shiftItems(wrapper, section)
+    collection.eventAggregator.subscribe('onNavigate', () => method(collection.focusedIndex))
   }
 
   render() {
@@ -64,12 +74,14 @@ export default class ContentSection extends React.Component {
     }
 
     return (
-      <div styleName="section" style={styles}>
-        {
-          items.map((item, index) => (
-            <Item key={index} {...item} sectionIndex={sectionIndex * 25} index={index} />
-          ))
-        }
+      <div ref="wrapper" styleName="wrapper" style={styles}>
+        <div ref="section" styleName="section">
+          {
+            items.map((item, index) => (
+              <Item key={index} {...item} sectionIndex={sectionIndex * items.length} index={index} />
+            ))
+          }
+        </div>
       </div>
     )
   }

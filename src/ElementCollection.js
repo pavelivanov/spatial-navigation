@@ -26,7 +26,6 @@ class ElementCollection extends Collection {
     item.parent = this.parent
 
     super.add(item, name)
-    this.getCountInRow()
     EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
   }
 
@@ -108,7 +107,7 @@ class ElementCollection extends Collection {
 
   getCountInRow() {
     let count = 1
-    let offsetLeft = 0
+    let offsetLeft = this.collection[0].domEl.offsetLeft
 
     for (let i = 1; i < this.collection.length; i++) {
       const element = this.collection[i]
