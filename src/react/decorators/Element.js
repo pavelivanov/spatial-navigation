@@ -19,9 +19,17 @@ const withElement = ({ keyBindings = {} } = {}) => {
         super()
 
         this.element = new Element
+
+        this.state = {
+          SNElement: this.element
+        }
       }
 
       handleChildRef = (component) => {
+        if (!component) {
+          return
+        }
+
         const { state, props } = component
 
         const ctxParent = this.context.element || this.context.container

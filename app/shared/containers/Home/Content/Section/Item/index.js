@@ -13,15 +13,20 @@ import Center from 'components/Center'
 export default class ContentSectionItem extends React.Component {
   render() {
     const { sectionIndex, index, disabled } = this.props
+    const { thumbnailUrl } = this.props
 
     const itemStyleName = cx('item', {
       'disabled': Boolean(disabled)
     })
 
+    const styles = {
+      backgroundImage: `url(${thumbnailUrl})`
+    }
+
     return (
-      <div styleName={itemStyleName}>
+      <div styleName={itemStyleName} style={styles}>
         <Center>
-          <div styleName="content">{sectionIndex + index + 1}</div>
+          <div styleName="content"></div>
         </Center>
       </div>
     )
