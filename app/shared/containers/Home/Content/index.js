@@ -81,7 +81,9 @@ export default class Home extends React.Component {
   componentDidMount() {
     const { SNContainer: { collection } } = this.props
 
-    collection.eventAggregator.subscribe('onNavigate', () => shiftSections(collection.focusedIndex))
+    collection.eventAggregator.subscribe('onNavigate', () => {
+      shiftSections(collection.focusedIndex)
+    })
   }
 
   render() {

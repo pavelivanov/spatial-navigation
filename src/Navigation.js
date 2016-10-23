@@ -37,7 +37,7 @@ class Navigation {
     if (instanceToFocus.parent && instanceToFocus.parent.collection) {
       instanceToFocus.parent.collection.eventAggregator.dispatchEvent('onNavigate')
     }
-    else if (instanceToFocus.collection) {
+    else if (!Boolean(instanceToFocus instanceof Container) && instanceToFocus.collection) {
       instanceToFocus.collection.eventAggregator.dispatchEvent('onNavigate')
     }
   }
