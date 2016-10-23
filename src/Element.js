@@ -89,7 +89,9 @@ class Element {
     }
   }
 
-  onUserClick() {
+  onUserClick(event) {
+    event.stopPropagation()
+
     if (this.disabled) {
       return
     }
