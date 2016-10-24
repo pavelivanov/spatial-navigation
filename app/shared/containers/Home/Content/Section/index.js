@@ -60,11 +60,9 @@ export default class ContentSection extends React.Component {
 
     const wrapper = ReactDOM.findDOMNode(this.refs.wrapper)
     const section = ReactDOM.findDOMNode(this.refs.section)
-
     const method = shiftItems(wrapper, section)
-    collection.eventAggregator.subscribe('onNavigate', () => {
-      method(collection.focusedIndex)
-    })
+
+    collection.eventAggregator.subscribe('onNavigate', () => method(collection.focusedIndex))
   }
 
   render() {

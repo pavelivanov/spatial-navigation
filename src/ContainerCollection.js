@@ -15,7 +15,6 @@ class ContainerCollection extends Collection {
 
   bindListeners() {
     EA.subscribe(`${EVENT_PREFIX}focusContainer`, ContainerCollection.setFocusedContainer)
-    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ContainerCollection.setFocusedContainer)
   }
 
   getInstanceToFocus(direction, container) {

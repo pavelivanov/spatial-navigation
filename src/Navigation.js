@@ -32,13 +32,27 @@ class Navigation {
       return
     }
 
-    instanceToFocus.focus()
+    this.focusInstance(instanceToFocus)
+  }
+  
+  focusInstance(instance) {
+    // TODO refactor this! After instance focused this.focusedElement changes and `onNavigate` events don't invoke
+    const prevFocusedElement = this.focusedElement
 
-    if (instanceToFocus.parent && instanceToFocus.parent.collection) {
-      instanceToFocus.parent.collection.eventAggregator.dispatchEvent('onNavigate')
+    instance.focus()
+
+    // dispatch event of collection focused element belongs to
+    if (instance.parent && instance.parent.collection) {
+      instance.parent.collection.eventAggregator.dispatchEvent('onNavigate')
     }
-    else if (!Boolean(instanceToFocus instanceof Container) && instanceToFocus.collection) {
-      instanceToFocus.collection.eventAggregator.dispatchEvent('onNavigate')
+
+    // dispatch event of parent of collection focused element belongs to
+    if (
+      instance.parent && prevFocusedElement.parent
+      && instance.parent != prevFocusedElement.parent
+      && instance.parent.parent && instance.parent.parent.collection
+    ) {
+      instance.parent.parent.collection.eventAggregator.dispatchEvent('onNavigate')
     }
   }
 

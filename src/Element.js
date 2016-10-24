@@ -1,7 +1,9 @@
 import EA from './EventAggregator'
 import { ContainerCollection } from './ContainerCollection'
 import ElementCollection from './ElementCollection'
+import Container from './Container'
 import Keyboard from './Keyboard'
+import Navigation from './Navigation'
 import { EVENT_PREFIX } from './util/constants'
 
 
@@ -80,12 +82,16 @@ class Element {
   }
 
   focus() {
-    if (!Boolean(this.collection)) {
-      this.domEl.focus()
-      EA.dispatchEvent(`${EVENT_PREFIX}focusElement`, this)
+    if (Boolean(this.collection)) {
+      this.collection.focus()
     }
     else {
-      this.collection.focus()
+      this.domEl.focus()
+      // TODO recursively set focusedIndex for all parents of this element
+      if (this.parent) {
+        this.setFocusedIndexForAllParents(this)
+      }
+      EA.dispatchEvent(`${EVENT_PREFIX}focusElement`, this)
     }
   }
 
@@ -96,8 +102,20 @@ class Element {
       return
     }
 
-    this.focus()
-    EA.dispatchEvent(`${EVENT_PREFIX}userFocusElement`, this)
+    Navigation.focusInstance(this)
+    //EA.dispatchEvent(`${EVENT_PREFIX}userFocusElement`, this)
+  }
+
+  // TODO rewrite this! use `belongs to` in all tree
+  setFocusedIndexForAllParents(element) {
+    if (!element.parent) {
+      ContainerCollection.setFocusedContainer(element)
+      return
+    }
+
+    element.parent.collection.setFocusedIndex(element)
+
+    this.setFocusedIndexForAllParents(element.parent)
   }
 
   blur() {

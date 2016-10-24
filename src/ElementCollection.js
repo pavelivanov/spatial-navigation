@@ -13,13 +13,6 @@ class ElementCollection extends Collection {
     this.countInRow = null
     this.currentRowNum = 0
     this.eventAggregator = new EventAggregator()
-
-    this.bindListeners()
-  }
-
-  bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onFocusElement)
-    EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onFocusElement)
   }
 
   add(item, name) {
@@ -58,11 +51,7 @@ class ElementCollection extends Collection {
     element.focus()
   }
 
-  onFocusElement(element) {
-    if (this.parent != element.parent) { // check element belongs to this collection
-      return
-    }
-
+  setFocusedIndex(element) {
     this.focusedIndex = this.indexOf(element)
   }
 

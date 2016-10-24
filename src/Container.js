@@ -28,7 +28,6 @@ class Container {
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}userFocusElement`, ::this.onUserFocusElement)
     EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.onUserFocusElement)
   }
 
