@@ -12,9 +12,6 @@ const sectionHeight = 200
 const spaceBetweenSections = 20
 
 const shiftSections = (focusedIndex) => {
-  console.log(111, prevFocusedIndex)
-  console.log(222, focusedIndex)
-
   const content   = document.getElementsByClassName(style.content)[0]
   const sections  = content.childNodes
   const direction = focusedIndex > prevFocusedIndex ? 'down' : 'up'
