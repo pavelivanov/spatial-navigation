@@ -37,18 +37,19 @@ class Keyboard {
     return key.join('|')
   }
 
-  addToMap(mapping) {
+  addToMap(mapping = {}) {
     for (let actionName in mapping) {
       const eventKey = Keyboard.getEventKey(mapping[actionName].keyCode, mapping[actionName].modifier)
       
-      if (Boolean(this.normalizeMap[eventKey])) {
-        throw new Error(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${actionName}`)
+      if (Boolean(eventKey in this.normalizeMap)) {
+        console.warn(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${actionName}`)
+        continue
       }
-      
-      this.normalizeMap[eventKey] = Object.assign(mapping[actionName], { name: actionName })
+
+      this.normalizeMap[eventKey] = { ...mapping[actionName], name: actionName }
     }
     
-    this.actionToKeyMapping = Object.assign(this.actionToKeyMapping, mapping)
+    this.actionToKeyMapping = { ...this.actionToKeyMapping, ...mapping }
   }
 
   /**
@@ -110,8 +111,8 @@ class Keyboard {
   bindListeners() {
     const thr = Keyboard.throttle(::this.keyPress, EVENT_DELAY)
 
-    document.addEventListener('keydown', thr)
-    document.addEventListener('keyup', thr.finish)
+    window.addEventListener('keydown', thr)
+    window.addEventListener('keyup', thr.finish)
   }
 
   /**
@@ -134,7 +135,8 @@ class Keyboard {
 
     const actionName = this.normalizeMap[eventKey].name
 
-    if (~[ 'up', 'down', 'left', 'right' ].find(action => action == actionName)) {
+    // TODO add Array.prototype.find, check it in old browsers, add polyfill
+    if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
       EA.dispatchEvent(`${EVENT_PREFIX}navigate`, actionName)
     }
     EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)

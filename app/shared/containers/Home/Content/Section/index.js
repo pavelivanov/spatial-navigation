@@ -20,7 +20,7 @@ const shiftItems = (sectionWrapper, section) => {
 
   return (focusedIndex) => {
     const contentWrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
-    const focusedElm = section.childNodes[focusedIndex]
+    const focusedElm = section.children[focusedIndex]
     const direction = focusedIndex > prevFocusedIndex ? 'right' : 'left'
 
     const sectionWrapperWidth   = sectionWrapper.offsetWidth

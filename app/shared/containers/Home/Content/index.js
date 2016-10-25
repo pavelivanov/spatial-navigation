@@ -13,7 +13,7 @@ const spaceBetweenSections = 20
 
 const shiftSections = (focusedIndex) => {
   const content   = document.getElementsByClassName(style.content)[0]
-  const sections  = content.childNodes
+  const sections  = content.children
   const direction = focusedIndex > prevFocusedIndex ? 'down' : 'up'
 
   if (!content.style.marginTop) {
