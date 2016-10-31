@@ -1,6 +1,6 @@
 import EA from './EventAggregator'
-import { ContainerCollection } from './ContainerCollection'
 import ElementCollection from './ElementCollection'
+import KeyMapNavigation from './KeyMapNavigation'
 import Container from './Container'
 import Keyboard from './Keyboard'
 import Navigation from './Navigation'
@@ -16,7 +16,7 @@ class Element {
     this.domEl = null
     this.disabled = false
     /**
-     * @type {null|Container}
+     * @type {null|Container|Element}
      */
     this.parent = null
     this.collection = null
@@ -37,40 +37,14 @@ class Element {
     this.domEl.addEventListener('click', ::this.onUserClick)
   }
 
-  bindKeyAction(mapping) {
-    Keyboard.addToMap(mapping)
-
-    EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
-      // TODO remove `getFocusedContainer`
-      const focusedContainer = ContainerCollection.getFocusedContainer()
-
-      if (!Boolean(actionName in mapping)) {
-        return
-      }
-
-      if (this.parent != focusedContainer) {
-        const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
-          if (this.parent.focused) {
-            focusedContainer.focus()
-          }
-        })
-
-        EA.once(`${EVENT_PREFIX}blurContainer`, (parent) => {
-          if (this.parent == parent) {
-            event.removeHandler(handler)
-            return true
-          }
-        })
-
-        this.focus()
-      }
-    })
-
-    return this
-  }
-
   unbindListeners() {
     this.domEl.removeEventListener('click', ::this.onUserClick)
+  }
+
+  bindKeyAction(mapping) {
+    const normailizedMap = Keyboard.addToMap(mapping)
+
+    KeyMapNavigation.addRelation(normailizedMap, this)
   }
 
   disable() {
@@ -82,15 +56,27 @@ class Element {
   }
 
   focus() {
+    // going inside
     if (Boolean(this.collection)) {
       this.collection.focus()
     }
+    // going outside
     else {
       this.domEl.focus()
-      // TODO recursively set focusedIndex for all parents of this element
-      if (this.parent) {
-        this.setFocusedIndexForAllParents(this)
+      this.parentCollection.setFocusedIndex(this)
+      
+      if (this.parent instanceof Element) {
+        this.parent.parentCollection.setFocusedIndex(this.parent)
       }
+
+      if (Navigation.focusedElement) {
+        const focusedContainer = Navigation.focusedElement.getContainer()
+        if (focusedContainer != this.getContainer()) {
+          focusedContainer.blur()
+        }
+      }
+
+      // used in Navigation to set focusedElement
       EA.dispatchEvent(`${EVENT_PREFIX}focusElement`, this)
     }
   }
@@ -103,19 +89,6 @@ class Element {
     }
 
     Navigation.focusInstance(this)
-    //EA.dispatchEvent(`${EVENT_PREFIX}userFocusElement`, this)
-  }
-
-  // TODO rewrite this! use `belongs to` in all tree
-  setFocusedIndexForAllParents(element) {
-    if (!element.parent) {
-      ContainerCollection.setFocusedContainer(element)
-      return
-    }
-
-    element.parent.collection.setFocusedIndex(element)
-
-    this.setFocusedIndexForAllParents(element.parent)
   }
 
   blur() {
@@ -129,6 +102,14 @@ class Element {
     }
 
     return this.collection
+  }
+
+  getContainer(parent = this.parent) {
+    if (!parent || !Boolean(parent instanceof Container)) {
+      return this.getContainer(parent.parent)
+    }
+
+    return parent
   }
 
   destroy() {

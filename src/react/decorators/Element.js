@@ -4,9 +4,8 @@ import Container from '../../Container'
 import Element from '../../Element'
 
 
-const withElement = ({ keyBindings = {} } = {}) => {
+const withElement = ({ keyBindings } = {}) => {
   return (ComposedComponent) => {
-
     class SNElementComponent extends React.Component {
       static displayName = "SN:Element"
 
@@ -19,6 +18,10 @@ const withElement = ({ keyBindings = {} } = {}) => {
         super()
 
         this.element = new Element
+
+        if (Boolean(keyBindings)) {
+          this.element.bindKeyAction(keyBindings)
+        }
 
         this.state = {
           SNElement: this.element
@@ -36,9 +39,9 @@ const withElement = ({ keyBindings = {} } = {}) => {
         const domEl = ReactDOM.findDOMNode(component)
 
         this.element.connectDomEl(domEl)
-        this.element.bindKeyAction(keyBindings)
 
         const disabled = state && state.disabled || props && props.disabled
+
         if (disabled) {
           this.element.disable()
         }

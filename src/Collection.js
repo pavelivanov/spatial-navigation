@@ -1,25 +1,31 @@
 class Collection {
   constructor() {
-    this.collection = []
-    this.collectionIds = {}
+    this.items = []
+    this.itemIds = {}
   }
 
   add(item, name) {
-    this.collection.push(item)
+    this.items.push(item)
+
     if (name) {
-      if (!this.collectionIds) {
-        this.collectionIds = {}
+      if (!this.itemIds) {
+        this.itemIds = {}
       }
-      this.collectionIds[name] = this.collection.length - 1
+
+      if (Boolean(name in this.itemIds)) {
+        console.warn(`Item with name "${name}" already exists in Collection`)
+      }
+
+      this.itemIds[name] = this.items.length - 1
     }
   }
 
   indexOf(item) {
-    return this.collection.indexOf(item)
+    return this.items.indexOf(item)
   }
 
   getByIndex(index) {
-    return this.collection[index]
+    return this.items[index]
   }
 
   /**
@@ -28,7 +34,7 @@ class Collection {
    * @returns {*}
    */
   getByName(name) {
-    return this.collection[this.collectionIds[name]]
+    return this.items[this.itemIds[name]]
   }
 
   isExists(name) {
@@ -36,7 +42,7 @@ class Collection {
   }
 
   get length() {
-    return this.collection.length
+    return this.items.length
   }
 }
 

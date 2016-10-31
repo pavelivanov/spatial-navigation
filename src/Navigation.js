@@ -1,27 +1,36 @@
 import EA from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
-import ContainerCollection from './ContainerCollection'
 import Container from './Container'
+import ContainerNavigation from './ContainerNavigation'
+import ElementNavigation from './ElementNavigation'
 
 
 class Navigation {
   constructor() {
+    /**
+     *
+     * @type {Element}
+     */
     this.focusedElement = null
 
     this.bindListeners()
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}navigate`, (direction) => ::this.navigate(direction))
+    EA.subscribe(`${EVENT_PREFIX}navigate`, (actionName) => {
+      if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
+        this.navigate(actionName)
+      }
+    })
     EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.setFocusedElement)
   }
 
   navigate(direction, instance = this.focusedElement) {
-    let instanceToFocus = instance.parent.collection.getInstanceToFocus(direction)
-
+    let instanceToFocus = ElementNavigation.getToNavigate(instance, direction)
+    
     if (!instanceToFocus) {
       if (instance.parent instanceof Container) {
-        instanceToFocus = ContainerCollection.getInstanceToFocus(direction, instance.parent)
+        instanceToFocus = ContainerNavigation.getToNavigate(instance.parent, direction)
       }
       else {
         return this.navigate(direction, instance.parent)

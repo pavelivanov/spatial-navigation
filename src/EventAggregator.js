@@ -1,4 +1,5 @@
 import Event from './Event'
+import { EVENT_PREFIX } from './util/constants'
 
 
 class EventAggregator {
@@ -70,5 +71,6 @@ class EventAggregator {
 export default new EventAggregator
 
 export {
-  EventAggregator
+  EVENT_PREFIX,
+  EventAggregator,
 }

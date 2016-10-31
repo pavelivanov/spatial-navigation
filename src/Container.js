@@ -1,7 +1,7 @@
 import EA from './EventAggregator'
 import Keyboard from './Keyboard'
 import ElementCollection from './ElementCollection'
-import { ContainerCollection } from './ContainerCollection'
+import KeyMapNavigation from './KeyMapNavigation'
 import { EVENT_PREFIX } from './util/constants'
 
 
@@ -32,35 +32,9 @@ class Container {
   }
 
   bindKeyAction(mapping) {
-    Keyboard.addToMap(mapping)
+    const normailizedMap = Keyboard.addToMap(mapping)
 
-    EA.subscribe(`${EVENT_PREFIX}keypress`, (actionName) => {
-      // TODO remove `getFocusedContainer`
-      const focusedContainer = ContainerCollection.getFocusedContainer()
-
-      if (!Boolean(actionName in mapping)) {
-        return
-      }
-
-      if (this != focusedContainer) {
-        const { event, handler } = EA.subscribe(`${EVENT_PREFIX}esc`, () => {
-          if (this.focused) {
-            focusedContainer.focus()
-          }
-        })
-
-        EA.once(`${EVENT_PREFIX}blurContainer`, (container) => {
-          if (this == container) {
-            event.removeHandler(handler)
-            return true
-          }
-        })
-
-        this.focus()
-      }
-    })
-
-    return this
+    KeyMapNavigation.addRelation(normailizedMap, this)
   }
 
   onUserFocusElement(element) {
@@ -88,10 +62,6 @@ class Container {
   blur() {
     this.focused = false
     EA.dispatchEvent(`${EVENT_PREFIX}blurContainer`, this)
-  }
-
-  getContainerToNavigate(direction) {
-    return this.leaveFor[direction]
   }
 
   getCollection() {

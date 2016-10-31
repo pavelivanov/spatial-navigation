@@ -5,7 +5,7 @@ import Container from '../../Container'
 import { EVENT_PREFIX } from '../../util/constants'
 
 
-const withContainer = (containerName, { map = {}, keyBindings = {}, ...settings }) => {
+const withContainer = (containerName, { map = {}, keyBindings, ...settings }) => {
   return (ComposedComponent) => {
 
     class SNContainerComponent extends React.Component {
@@ -14,17 +14,11 @@ const withContainer = (containerName, { map = {}, keyBindings = {}, ...settings 
       constructor() {
         super()
 
-        if (!ContainerCollection.isExists(containerName)) {
-          ContainerCollection.add(Container.create(containerName, map), containerName)
-        }
+        this.container = Container.create(containerName, map)
 
-        /**
-         * @type {Container}
-         * @private
-         */
-        this.container = ContainerCollection.getByName(containerName)
+        ContainerCollection.add(this.container, containerName)
 
-        if (Boolean(this.container) && Boolean(keyBindings)) {
+        if (Boolean(keyBindings)) {
           this.container.bindKeyAction(keyBindings)
         }
 

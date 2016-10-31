@@ -7,7 +7,7 @@ import style from './style'
 
 
 @SNReact.Decorators.Element({
-  keyBindings: { search: { keyCode: 70, modifier: 'ctrl' }, f: { keyCode: 70 } }
+  keyBindings: [ { keyCode: 70, modifier: 'meta' }, { keyCode: 70 } ]
 })
 @CSSModules(style)
 export default class HeaderSearch extends React.Component {

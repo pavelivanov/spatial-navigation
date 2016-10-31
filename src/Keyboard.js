@@ -1,12 +1,10 @@
 import EA from './EventAggregator'
-import Logger from './Logger'
 import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
 
 class Keyboard {
   constructor() {
-    this.actionToKeyMapping = {}
-    this.normalizeMap = {}
+    this.normalizedMap = {}
     this.bindListeners()
   }
 
@@ -20,7 +18,10 @@ class Keyboard {
     const key = [ keyCode ]
     
     if (modifier instanceof KeyboardEvent) {
-      if ((window.navigator.platform.match(/^Mac/) ? modifier.metaKey : modifier.ctrlKey)) {
+      if (modifier.metaKey) {
+        key.push('meta')
+      }
+      else if (modifier.ctrlKey) {
         key.push('ctrl')
       }
       else if (modifier.shiftKey) {
@@ -37,19 +38,30 @@ class Keyboard {
     return key.join('|')
   }
 
-  addToMap(mapping = {}) {
-    for (let actionName in mapping) {
-      const eventKey = Keyboard.getEventKey(mapping[actionName].keyCode, mapping[actionName].modifier)
-      
-      if (Boolean(eventKey in this.normalizeMap)) {
-        console.warn(`Keymap ${eventKey} exists with name ${this.normalizeMap[eventKey].name}. Check your map name ${actionName}`)
-        continue
+  /**
+   *
+   * @param mapping {Array|Object}
+   * @returns {{}}
+   */
+  addToMap(mapping) {
+    const normalizedMap = {}
+
+    if (!Boolean(mapping instanceof Array)) {
+      mapping = [ mapping ]
+    }
+
+    mapping.forEach((map) => {
+      const eventKey = Keyboard.getEventKey(map.keyCode, map.modifier)
+
+      if (Boolean(eventKey in this.normalizedMap)) {
+        console.warn(`Keymap ${eventKey} already exists`)
       }
 
-      this.normalizeMap[eventKey] = { ...mapping[actionName], name: actionName }
-    }
-    
-    this.actionToKeyMapping = { ...this.actionToKeyMapping, ...mapping }
+      this.normalizedMap[eventKey] = map
+      normalizedMap[eventKey] = map
+    })
+
+    return normalizedMap
   }
 
   /**
@@ -59,8 +71,10 @@ class Keyboard {
    */
   static getModifier(event, modifier) {
     switch (modifier) {
+      case 'meta':
+        return event.metaKey
       case 'ctrl':
-        return (window.navigator.platform.match(/^Mac/) ? event.metaKey : event.ctrlKey)
+        return event.ctrlKey
       case 'shift':
         return event.shiftKey
       case 'alt':
@@ -122,25 +136,24 @@ class Keyboard {
    */
   keyPress(event) {
     const eventKey = Keyboard.getEventKey(event.keyCode, event)
-    //Logger.debug(eventKey)
 
     if (
-      !Boolean(eventKey in this.normalizeMap)
-      || !Boolean(Keyboard.getModifier(event, this.normalizeMap[eventKey].modifier))
+      !Boolean(eventKey in this.normalizedMap)
+      // this condition need for `throttle` method. If press `ctrl + F`, key up `F` throttling continue
+      || !Boolean(Keyboard.getModifier(event, this.normalizedMap[eventKey].modifier))
     ) {
       return true
     }
 
     event.preventDefault()
 
-    const actionName = this.normalizeMap[eventKey].name
+    EA.dispatchEvent(`${EVENT_PREFIX}keypress`, eventKey)
 
-    // TODO add Array.prototype.find, check it in old browsers, add polyfill
-    if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
-      EA.dispatchEvent(`${EVENT_PREFIX}navigate`, actionName)
+    const eventName = this.normalizedMap[eventKey].name
+    if (Boolean(eventName)) {
+      EA.dispatchEvent(`${EVENT_PREFIX}navigate`, eventName)
+      EA.dispatchEvent(`${EVENT_PREFIX}${eventName}`)
     }
-    EA.dispatchEvent(`${EVENT_PREFIX}keypress`, actionName)
-    EA.dispatchEvent(`${EVENT_PREFIX}${actionName}`)
 
     return true
   }

@@ -11,28 +11,16 @@ import Root from 'containers/Root'
 
 import SN from 'SN'
 
-const actionToKeyMapping = {
-  left: {
-    keyCode: 37
-  },
-  up: {
-    keyCode: 38
-  },
-  right: {
-    keyCode: 39
-  },
-  down: {
-    keyCode: 40
-  },
-  esc: {
-    keyCode: 27
-  },
-  tab: {
-    keyCode: 9
-  }
-}
+const actionToKeyMapping = [
+  { keyCode: 37, name: 'left' },
+  { keyCode: 38, name: 'up' },
+  { keyCode: 39, name: 'right' },
+  { keyCode: 40, name: 'down' },
+  { keyCode: 27, name: 'esc' },
+]
 
 SN.Keyboard.addToMap(actionToKeyMapping)
+
 
 const history = browserHistory
 
