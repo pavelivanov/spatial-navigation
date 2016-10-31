@@ -9,27 +9,25 @@ import style from './style'
 import Item from './Item'
 
 
-const sectionHeight = 200
-const spaceBetweenSections = 20
-const itemWidth = 220
-const spaceBetweenItems = 20
-
 const shiftItems = (sectionWrapper, section) => {
+  const contentWrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
+  const items = section.children
+
   let prevFocusedIndex = 0
   let sectionCurrMarginLeft = 0
 
   return (focusedIndex) => {
-    const contentWrapper = document.getElementsByClassName(contentStyle.wrapper)[0]
-    const focusedElm = section.children[focusedIndex]
+    const focusedItem = items[focusedIndex]
     const direction = focusedIndex > prevFocusedIndex ? 'right' : 'left'
+    const itemWidth = focusedItem.offsetWidth
 
     const sectionWrapperWidth   = sectionWrapper.offsetWidth
     const centringOffsetLeft    = (sectionWrapperWidth - itemWidth) / 2
-    const focusedElmOffsetLeft  = focusedElm.offsetLeft
+    const focusedItemOffsetLeft  = focusedItem.offsetLeft
     let sectionNewMarginLeft
 
-    if (focusedElmOffsetLeft > centringOffsetLeft || Math.abs(sectionCurrMarginLeft) > centringOffsetLeft) {
-      sectionNewMarginLeft = sectionCurrMarginLeft + centringOffsetLeft - focusedElmOffsetLeft
+    if (focusedItemOffsetLeft > centringOffsetLeft || Math.abs(sectionCurrMarginLeft) > centringOffsetLeft) {
+      sectionNewMarginLeft = sectionCurrMarginLeft + centringOffsetLeft - focusedItemOffsetLeft
       section.style.marginLeft = sectionNewMarginLeft + 'px'
     }
     else {
@@ -69,7 +67,7 @@ export default class ContentSection extends React.Component {
     const { index: sectionIndex, items } = this.props
 
     const styles = {
-      top: `${sectionIndex * (sectionHeight + spaceBetweenSections)}px`
+      top: `${100 * sectionIndex}%`
     }
 
     return (

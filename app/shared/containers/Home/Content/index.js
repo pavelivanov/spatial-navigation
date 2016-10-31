@@ -7,33 +7,46 @@ import style from './style'
 import Section from './Section'
 
 
-let prevFocusedIndex = 0
-const sectionHeight = 200
-const spaceBetweenSections = 20
+const getTransitionValue = (css) => parseInt(css.match(/\.*translateY\((.*)px\)/)[1])
 
-const shiftSections = (focusedIndex) => {
-  const content   = document.getElementsByClassName(style.content)[0]
-  const sections  = content.children
-  const direction = focusedIndex > prevFocusedIndex ? 'down' : 'up'
+const shiftSections = () => {
+  const content                             = document.getElementsByClassName(style.content)[0]
+  const sections                            = content.children
+  const dumbSectionPlaceholder              = document.getElementsByClassName(style.dumbSectionPlaceholder)[0]
+  const dumbSpaceBetweenSectionPlaceholder  = document.getElementsByClassName(style.dumbSpaceBetweenSectionPlaceholder)[0]
 
-  if (!content.style.marginTop) {
-    content.style.marginTop = '0px'
+  let prevFocusedIndex = 0
+
+  return (focusedIndex) => {
+    const direction             = focusedIndex > prevFocusedIndex ? 'down' : 'up'
+    const sectionHeight         = dumbSectionPlaceholder.offsetHeight
+    const spaceBetweenSections  = dumbSpaceBetweenSectionPlaceholder.offsetHeight
+    const sectionFullHeight     = sectionHeight + spaceBetweenSections
+
+    if (!content.style.transform) {
+      content.style.transform = 'translateY(0px)'
+    }
+
+    if (direction == 'down') {
+      const contentTranslateY = `${getTransitionValue(content.style.transform) - sectionFullHeight}px`
+      const sectionTranslateY = `${parseInt(sections[prevFocusedIndex].style.top) + sectionHeight}px`
+
+      content.style.transform = `translateY(${contentTranslateY}) `
+      sections[prevFocusedIndex].className += ' hiddenSection'
+      sections[prevFocusedIndex].style.transform = `translateY(${sectionTranslateY}) scale(0.75)`
+    }
+    else {
+      const contentTranslateY = `${getTransitionValue(content.style.transform) + sectionFullHeight}px`
+
+      content.style.transform = `translateY(${contentTranslateY})`
+      sections[focusedIndex].className = sections[focusedIndex].className.replace(' hiddenSection', '')
+      sections[focusedIndex].style.transform = 'translateY(0px) scale(1)'
+    }
+
+    document.body.scrollTop = 0
+
+    prevFocusedIndex = focusedIndex
   }
-
-  if (direction == 'down') {
-    sections[prevFocusedIndex].className += ' hiddenSection'
-    sections[prevFocusedIndex].style.top = parseInt(sections[prevFocusedIndex].style.top) + sectionHeight + 'px'
-    content.style.marginTop = parseInt(content.style.marginTop) - (sectionHeight + spaceBetweenSections) + 'px'
-  }
-  else {
-    sections[focusedIndex].className = sections[focusedIndex].className.replace(' hiddenSection', '')
-    sections[focusedIndex].style.top = parseInt(sections[focusedIndex].style.top) - sectionHeight + 'px'
-    content.style.marginTop = parseInt(content.style.marginTop) + (sectionHeight + spaceBetweenSections) + 'px'
-  }
-
-  document.body.scrollTop = 0
-
-  prevFocusedIndex = focusedIndex
 }
 
 
@@ -47,8 +60,9 @@ export default class Content extends React.Component {
 
   componentDidMount() {
     const { SNContainer: { collection } } = this.props
+    const method = shiftSections()
 
-    collection.eventAggregator.subscribe('onNavigate', () => shiftSections(collection.focusedIndex))
+    collection.eventAggregator.subscribe('onNavigate', () => method(collection.focusedIndex))
   }
 
   render() {
@@ -60,6 +74,8 @@ export default class Content extends React.Component {
               <Section key={index} index={index} items={items} />
             ))
           }
+          <div styleName="dumbSectionPlaceholder"></div>
+          <div styleName="dumbSpaceBetweenSectionPlaceholder"></div>
         </div>
       </div>
     )
