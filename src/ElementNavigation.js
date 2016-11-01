@@ -1,8 +1,4 @@
 class ElementNavigation {
-  constructor() {
-    
-  }
-
   getToNavigate(currElement, direction) {
     let element
 
@@ -18,7 +14,7 @@ class ElementNavigation {
         else {
           // MAGIC!
           let nextIndex = currIndex + countInRow
-          const maxCountInCollection = Math.ceil(currElement.parentCollection.length / countInRow)
+          const maxCountInCollection = Math.ceil(currElement.parentCollection.length / countInRow) * countInRow
           const lastElementIndex = currElement.parentCollection.length - 1
 
           if (nextIndex > lastElementIndex && nextIndex < maxCountInCollection) {

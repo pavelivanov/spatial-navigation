@@ -18,7 +18,7 @@ class Layout {
         container.bindKeyAction(options[containerName].bind)
       }
 
-      if (Boolean(options[containerName].settings.startContainer)) {
+      if (Boolean(options[containerName].settings && options[containerName].settings.startContainer)) {
         EA.once(`${EVENT_PREFIX}addElement`, (container) => {
           if (container.name == containerName) {
             container.focus()

@@ -57,6 +57,7 @@ class Navigation {
 
     // dispatch event of parent of collection focused element belongs to
     if (
+      prevFocusedElement && 
       instance.parent && prevFocusedElement.parent
       && instance.parent != prevFocusedElement.parent
       && instance.parent.parent && instance.parent.parent.collection

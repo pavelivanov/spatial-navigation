@@ -12,14 +12,18 @@ class Element {
     return new this(domEl)
   }
 
-  constructor() {
-    this.domEl = null
+  constructor(domEl) {
+    this.domEl = domEl || null
     this.disabled = false
     /**
      * @type {null|Container|Element}
      */
     this.parent = null
     this.collection = null
+
+    if (domEl) {
+      this.connectDomEl(domEl)
+    }
   }
 
   connectDomEl(domEl) {

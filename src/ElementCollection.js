@@ -10,8 +10,6 @@ class ElementCollection extends Collection {
 
     this.parent = parent
     this.focusedIndex = null
-    this.countInRow = null
-    this.currentRowNum = 0
     this.eventAggregator = new EventAggregator()
   }
 
