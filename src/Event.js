@@ -1,6 +1,3 @@
-import Logger from './Logger'
-
-
 class DispatchedEvent {
   constructor() {
     this.propagationStopped = false
