@@ -1,9 +1,9 @@
 {
   "name": "spatial-navigation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React extensions for spatial-navigation",
-  "homepage": "https://github.com/grammka/spatial-navigation#readme",
-  "author": "Pavel Ivanov <grammka@gmail.com> (http://github.com/grammka)",
+  "homepage": "https://github.com/pavelivanov/spatial-navigation#readme",
+  "author": "Pavel Ivanov <grammka@gmail.com> (http://github.com/pavelivanov)",
   "contributors": [
     "Ivan Koretsky <gillbeits@gmail.com> (http://github.com/gillbeits)"
   ],
