@@ -1,7 +1,7 @@
 {
   "name": "spatial-navigation",
   "version": "0.0.5",
-  "description": "React extensions for spatial-navigation",
+  "description": "A javascript-based implementation of Spatial Navigation.",
   "homepage": "https://github.com/pavelivanov/spatial-navigation#readme",
   "author": "Pavel Ivanov <grammka@gmail.com> (http://github.com/pavelivanov)",
   "contributors": [
