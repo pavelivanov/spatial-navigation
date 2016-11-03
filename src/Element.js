@@ -8,11 +8,14 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class Element {
-  static create(domEl) {
-    return new this(domEl)
-  }
+  /**
+   * 
+   * @param domEl
+   * @param settings
+   */
+  static create = (domEl, settings) => new this(domEl, settings)
 
-  constructor(domEl) {
+  constructor(domEl, { keyBindings }) {
     this.domEl = domEl || null
     this.disabled = false
     /**
@@ -23,6 +26,10 @@ class Element {
 
     if (domEl) {
       this.connectDomEl(domEl)
+    }
+
+    if (Boolean(keyBindings)) {
+      this.bindKeyAction(keyBindings)
     }
   }
 

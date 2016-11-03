@@ -1,27 +1,7 @@
-spatialNavigation.default.init({
-  Sidebar: {
-    map: {
-      right: 'Content'
-    },
-  },
-  Header: {
-    map: {
-      left: 'Sidebar',
-      down: 'Content'
-    }
-  },
-  Content: {
-    map: {
-      up: 'Header',
-      left: 'Sidebar'
-    },
-    settings: {
-      startContainer: true
-    }
-  }
-})
+var SN = spatialNavigation;
 
-spatialNavigation.Keyboard.addToMap([
+
+SN.Keyboard.addToMap([
   { keyCode: 37, name: 'left' },
   { keyCode: 38, name: 'up' },
   { keyCode: 39, name: 'right' },
@@ -32,9 +12,26 @@ spatialNavigation.Keyboard.addToMap([
 ])
 
 
-var SidebarContainer  = spatialNavigation.ContainerCollection.getByName('Sidebar');
-var HeaderContainer   = spatialNavigation.ContainerCollection.getByName('Header');
-var ContentContainer  = spatialNavigation.ContainerCollection.getByName('Content');
+var SidebarContainer  = spatialNavigation.ContainerCollection.add(SN.Container.create('Sidebar', {
+  map: {
+    right: 'Content'
+  }
+}));
+
+var HeaderContainer   = spatialNavigation.ContainerCollection.add(SN.Container.create('Sidebar', {
+  map: {
+    left: 'Sidebar',
+    down: 'Content'
+  }
+}));
+
+var ContentContainer  = spatialNavigation.ContainerCollection.add(SN.Container.create('Content', {
+  map: {
+    up: 'Header',
+    left: 'Sidebar'
+  },
+  startContainer: true
+}));
 
 
 var navigItems    = document.getElementsByClassName('navigItem');

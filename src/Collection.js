@@ -18,6 +18,8 @@ class Collection {
 
       this.itemIds[name] = this.items.length - 1
     }
+
+    return item
   }
 
   indexOf(item) {

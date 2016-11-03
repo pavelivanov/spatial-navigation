@@ -9,20 +9,35 @@ class Container {
   /**
    *
    * @param name
-   * @param map
+   * @param options
    * @returns {Container}
    */
-  static create(name, map) {
-    return new this(name, map)
-  }
+  static create = (name, options) => new this(name, options)
 
-  constructor(name, map) {
-    this.name = name
-    this.disabled = false
-    this.focused = false
-    this.collection = new ElementCollection(this)
-    this.leaveFor = map || {} // which Container will be focused on leave this Container
-    this.enterTo = 'default' // which Element will be focused on enter this Container ( first | last | default )
+  constructor(name, { map = {}, keyBindings, startContainer }) {
+    this.name         = name
+    this.disabled     = false
+    this.focused      = false
+    this.collection   = new ElementCollection(this)
+    this.leaveFor     = map // which Container will be focused on leave this Container
+    this.enterTo      = 'default' // which Element will be focused on enter this Container ( first | last | default )
+
+    if (startContainer) {
+      // TODO what if no one element added at the start, but aftem time will be added?
+      // TODO need to rework this and focus only on init
+      EventAggregator.once(`${EVENT_PREFIX}addElement`, (container) => {
+        if (container == this) {
+          this.focus()
+          return true
+        }
+
+        return false
+      })
+    }
+
+    if (Boolean(keyBindings)) {
+      this.bindKeyAction(keyBindings)
+    }
 
     this.bindListeners()
   }
