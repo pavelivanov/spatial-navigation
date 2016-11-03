@@ -1,6 +1,6 @@
 {
   "name": "spatial-navigation",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "React extensions for spatial-navigation",
   "homepage": "https://github.com/pavelivanov/spatial-navigation#readme",
   "author": "Pavel Ivanov <grammka@gmail.com> (http://github.com/pavelivanov)",
@@ -26,7 +26,6 @@
     "babel-loader": "^6.2.7",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-arrow-functions": "^6.8.0",
-    "babel-preset-babili": "0.0.8",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "webpack": "^1.13.3"
