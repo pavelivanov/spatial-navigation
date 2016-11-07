@@ -13,9 +13,9 @@ class Element {
    * @param domEl
    * @param settings
    */
-  static create = (domEl, settings) => new this(domEl, settings)
+  static create = (domEl, settings) => new Element(domEl, settings)
 
-  constructor(domEl, { keyBindings }) {
+  constructor(domEl, { keyBindings } = {}) {
     this.domEl = domEl || null
     this.disabled = false
     /**
