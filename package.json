@@ -1,6 +1,6 @@
 {
   "name": "spatial-navigation",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A javascript-based implementation of Spatial Navigation.",
   "homepage": "https://github.com/pavelivanov/spatial-navigation#readme",
   "author": "Pavel Ivanov <grammka@gmail.com> (http://github.com/pavelivanov)",
@@ -18,7 +18,8 @@
   ],
   "main": "./lib/index.js",
   "scripts": {
-    "build": "./scripts/build.sh"
+    "build": "./scripts/build.sh",
+    "prepublish": "npm run build"
   },
   "dependencies": {},
   "devDependencies": {
