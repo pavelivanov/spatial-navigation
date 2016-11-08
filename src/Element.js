@@ -9,20 +9,19 @@ import { EVENT_PREFIX } from './util/constants'
 
 class Element {
   /**
-   * 
    * @param domEl
    * @param settings
    */
   static create = (domEl, settings) => new Element(domEl, settings)
 
-  constructor(domEl, { keyBindings, autoFocus, hasCollection } = {}) {
+  constructor(domEl, { keyBindings, autoFocus, hasCollection, collectionSettings } = {}) {
     this.domEl = domEl || null
     this.disabled = false
     /**
      * @type {null|Container|Element}
      */
     this.parent = null
-    this.collection = hasCollection ? new ElementCollection(this) : null
+    this.collection = hasCollection || collectionSettings ? new ElementCollection(this, collectionSettings) : null
 
     if (domEl) {
       this.connectDomEl(domEl)
@@ -33,16 +32,19 @@ class Element {
     }
 
     if (autoFocus) {
-      // TODO what if no one element added at the start, but aftem time will be added?
-      // TODO need to rework this and focus only on init
-      EA.once(`${EVENT_PREFIX}addElement`, (element) => {
-        if (element == this) {
-          this.focus()
-          return true
-        }
+      if (Boolean(this.collection)) {
+        this.collection.eventAggregator.once(`${EVENT_PREFIX}addElement`, (element) => {
+          if (element == this) {
+            this.focus()
+            return true
+          }
 
-        return false
-      })
+          return false
+        })
+      }
+      else {
+        this.focus()
+      }
     }
   }
 
@@ -88,7 +90,7 @@ class Element {
     else {
       this.domEl.focus()
       this.parentCollection.setFocusedIndex(this)
-      
+
       if (this.parent instanceof Element) {
         this.parent.parentCollection.setFocusedIndex(this.parent)
       }

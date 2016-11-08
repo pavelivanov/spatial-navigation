@@ -37,12 +37,32 @@ class ElementNavigation {
         }
         break
     }
+    
+    if (
+      element.parentCollection.settings.lazy
+      && element.parentCollection.settings.lazy[direction]
+    ) {
+      const countFromEnd = this.getCountFromEnd(element, direction)
+
+      if (element.parentCollection.settings.lazy[direction].fromEnd == countFromEnd) {
+        element.parentCollection.lazyLoad()
+      }
+    }
 
     if (element && element.disabled) {
       return this.getToNavigate(element, direction)
     }
 
     return element
+  }
+
+  getCountFromEnd(element, direction) {
+    const countInRow          = this.getCountInRow(element.parentCollection)
+    const elementIndex        = element.parentCollection.getIndex(element)
+    const elementColumnIndex  = elementIndex % countInRow
+    const countFromEnd        = countInRow - (elementColumnIndex + 1)
+
+    return countFromEnd
   }
 
   getCountInRow(collection) {

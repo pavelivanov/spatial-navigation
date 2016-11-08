@@ -5,12 +5,15 @@ import Container from './Container'
 
 
 class ElementCollection extends Collection {
-  constructor(parent) {
+  constructor(parent, settings) {
     super()
 
     this.parent = parent
+    this.settings = settings
     this.focusedIndex = null
     this.eventAggregator = new EventAggregator()
+    this.lazyLoading = false
+    this.onLazyLoad = null
   }
 
   add(item, name) {
@@ -18,6 +21,8 @@ class ElementCollection extends Collection {
     item.parentCollection = this
 
     super.add(item, name)
+
+    this.eventAggregator.dispatchEvent(`${EVENT_PREFIX}addElement`, item)
     EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
   }
 
@@ -56,6 +61,22 @@ class ElementCollection extends Collection {
 
   setFocusedIndex(element) {
     this.focusedIndex = this.getIndex(element)
+  }
+
+  lazyLoad() {
+    if (typeof this.onLazyLoad != 'function' || this.lazyLoading) {
+      return
+    }
+
+    this.lazyLoading = true
+
+    this.onLazyLoad(() => {
+      this.lazyLoading = false
+    })
+  }
+
+  subscribeLazyLoad(requestWrapper) {
+    this.onLazyLoad = requestWrapper
   }
 }
 

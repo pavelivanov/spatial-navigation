@@ -8,8 +8,7 @@ import ElementNavigation from './ElementNavigation'
 class Navigation {
   constructor() {
     /**
-     *
-     * @type {Element}
+     * @type {null|Element}
      */
     this.focusedElement = null
 
@@ -42,10 +41,13 @@ class Navigation {
 
     let instanceToFocus = ElementNavigation.getToNavigate(instance, direction)
 
+    // if there is no Element to navigate in passed direction
     if (!instanceToFocus) {
+      // if parent of Element is Container
       if (instance.parent instanceof Container) {
         instanceToFocus = ContainerNavigation.getToNavigate(instance.parent, direction)
       }
+      // if parent of Element is Element
       else {
         return this.getInstanceToFocus(direction, instance.parent)
       }

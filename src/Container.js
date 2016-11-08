@@ -7,7 +7,6 @@ import { EVENT_PREFIX } from './util/constants'
 
 class Container {
   /**
-   *
    * @param name
    * @param options
    * @returns {Container}
@@ -20,13 +19,10 @@ class Container {
     this.focused      = false
     this.collection   = new ElementCollection(this)
     this.leaveFor     = map // which Container will be focused on leave this Container
-    this.enterTo      = 'default' // which Element will be focused on enter this Container ( first | last | default )
 
     if (autoFocus) {
-      // TODO what if no one element added at the start, but aftem time will be added?
-      // TODO need to rework this and focus only on init
-      EA.once(`${EVENT_PREFIX}addElement`, (container) => {
-        if (container == this) {
+      EA.once(`${EVENT_PREFIX}addElement`, (instance) => {
+        if (instance instanceof Container ? this == instance : this == instance.getContainer()) {
           this.focus()
           return true
         }
