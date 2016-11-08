@@ -15,14 +15,14 @@ class Element {
    */
   static create = (domEl, settings) => new Element(domEl, settings)
 
-  constructor(domEl, { keyBindings } = {}) {
+  constructor(domEl, { keyBindings, autoFocus, hasCollection } = {}) {
     this.domEl = domEl || null
     this.disabled = false
     /**
      * @type {null|Container|Element}
      */
     this.parent = null
-    this.collection = null
+    this.collection = hasCollection ? new ElementCollection(this) : null
 
     if (domEl) {
       this.connectDomEl(domEl)
@@ -30,6 +30,19 @@ class Element {
 
     if (Boolean(keyBindings)) {
       this.bindKeyAction(keyBindings)
+    }
+
+    if (autoFocus) {
+      // TODO what if no one element added at the start, but aftem time will be added?
+      // TODO need to rework this and focus only on init
+      EA.once(`${EVENT_PREFIX}addElement`, (element) => {
+        if (element == this) {
+          this.focus()
+          return true
+        }
+
+        return false
+      })
     }
   }
 
@@ -95,7 +108,7 @@ class Element {
   onUserClick(event) {
     event.stopPropagation()
 
-    if (this.disabled) {
+    if (this.disabled || Boolean(this.collection)) {
       return
     }
 
@@ -105,14 +118,6 @@ class Element {
   blur() {
     this.domEl.blur()
     EA.dispatchEvent(`${EVENT_PREFIX}blurElement`, this)
-  }
-
-  getCollection() {
-    if (!Boolean(this.collection)) {
-      this.collection = new ElementCollection(this)
-    }
-
-    return this.collection
   }
 
   getContainer(parent = this.parent) {

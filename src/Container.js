@@ -14,7 +14,7 @@ class Container {
    */
   static create = (name, options) => new Container(name, options)
 
-  constructor(name, { map = {}, keyBindings, startContainer }) {
+  constructor(name, { map = {}, keyBindings, autoFocus } = {}) {
     this.name         = name
     this.disabled     = false
     this.focused      = false
@@ -22,7 +22,7 @@ class Container {
     this.leaveFor     = map // which Container will be focused on leave this Container
     this.enterTo      = 'default' // which Element will be focused on enter this Container ( first | last | default )
 
-    if (startContainer) {
+    if (autoFocus) {
       // TODO what if no one element added at the start, but aftem time will be added?
       // TODO need to rework this and focus only on init
       EA.once(`${EVENT_PREFIX}addElement`, (container) => {
@@ -63,10 +63,6 @@ class Container {
   blur() {
     this.focused = false
     EA.dispatchEvent(`${EVENT_PREFIX}blurContainer`, this)
-  }
-
-  getCollection() {
-    return this.collection
   }
 }
 

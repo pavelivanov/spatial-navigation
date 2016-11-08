@@ -1,3 +1,4 @@
+import Mouse from './Mouse'
 import Keyboard from './Keyboard'
 import EventAggregator from './EventAggregator'
 import ContainerCollection from './ContainerCollection'

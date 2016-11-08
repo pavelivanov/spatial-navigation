@@ -17,25 +17,16 @@ class Navigation {
   }
 
   bindListeners() {
-    EA.subscribe(`${EVENT_PREFIX}navigate`, (actionName) => {
-      if (~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
-        this.navigate(actionName)
-      }
-    })
+    EA.subscribe(`${EVENT_PREFIX}navigate`, ::this.navigate)
     EA.subscribe(`${EVENT_PREFIX}focusElement`, ::this.setFocusedElement)
   }
 
-  navigate(direction, instance = this.focusedElement) {
-    let instanceToFocus = ElementNavigation.getToNavigate(instance, direction)
-    
-    if (!instanceToFocus) {
-      if (instance.parent instanceof Container) {
-        instanceToFocus = ContainerNavigation.getToNavigate(instance.parent, direction)
-      }
-      else {
-        return this.navigate(direction, instance.parent)
-      }
+  navigate(actionName) {
+    if (!~[ 'up', 'down', 'left', 'right' ].indexOf(actionName)) {
+      return
     }
+
+    const instanceToFocus = this.getInstanceToFocus(actionName)
 
     if (!instanceToFocus) {
       return
@@ -43,9 +34,27 @@ class Navigation {
 
     this.focusInstance(instanceToFocus)
   }
+
+  getInstanceToFocus(direction, instance = this.focusedElement) {
+    if (!Boolean(instance)) {
+      return null
+    }
+
+    let instanceToFocus = ElementNavigation.getToNavigate(instance, direction)
+
+    if (!instanceToFocus) {
+      if (instance.parent instanceof Container) {
+        instanceToFocus = ContainerNavigation.getToNavigate(instance.parent, direction)
+      }
+      else {
+        return this.getInstanceToFocus(direction, instance.parent)
+      }
+    }
+
+    return instanceToFocus
+  }
   
   focusInstance(instance) {
-    // TODO refactor this! After instance focused this.focusedElement changes and `onNavigate` events don't invoke
     const prevFocusedElement = this.focusedElement
 
     instance.focus()
