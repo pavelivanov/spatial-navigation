@@ -39,7 +39,9 @@ class ElementNavigation {
     }
     
     if (
-      element.parentCollection.settings.lazy
+      element
+      && element.parentCollection.settings
+      && element.parentCollection.settings.lazy
       && element.parentCollection.settings.lazy[direction]
     ) {
       const countFromEnd = this.getCountFromEnd(element, direction)
