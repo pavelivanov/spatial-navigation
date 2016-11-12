@@ -7,17 +7,31 @@ class Collection {
   add(item, name) {
     this.items.push(item)
 
-    if (name) {
-      if (!this.itemIds) {
-        this.itemIds = {}
-      }
-
-      if (Boolean(name in this.itemIds)) {
-        console.warn(`Item with name "${name}" already exists in Collection`)
-      }
-
-      this.itemIds[name] = this.items.length - 1
+    if (!name) {
+      throw Error('You must pass name of item you try add to Collection')
     }
+
+    if (!this.itemIds) {
+      this.itemIds = {}
+    }
+
+    if (Boolean(name in this.itemIds)) {
+      console.warn(`Item with name "${name}" already exists in Collection`)
+    }
+
+    this.itemIds[name] = this.items.length - 1
+
+    return item
+  }
+  
+  unshift(item) {
+    this.items.unshift(item)
+
+    return item
+  }
+  
+  push(item) {
+    this.items.push(item)
 
     return item
   }

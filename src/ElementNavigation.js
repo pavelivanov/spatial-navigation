@@ -37,7 +37,8 @@ class ElementNavigation {
         }
         break
     }
-    
+
+    // TODO move this from here ?
     if (
       element
       && element.parentCollection.settings

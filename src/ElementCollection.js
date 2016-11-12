@@ -16,14 +16,24 @@ class ElementCollection extends Collection {
     this.onLazyLoad = null
   }
 
-  add(item, name) {
-    item.parent = this.parent
-    item.parentCollection = this
+  _extendElement(element) {
+    element.parent = this.parent
+    element.parentCollection = this
 
-    super.add(item, name)
+    //this.eventAggregator.dispatchEvent(`${EVENT_PREFIX}addElement`, item)
+    //EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
+  }
 
-    this.eventAggregator.dispatchEvent(`${EVENT_PREFIX}addElement`, item)
-    EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
+  unshift(element) {
+    this._extendElement(element)
+    super.unshift(element)
+    return element
+  }
+
+  push(element) {
+    this._extendElement(element)
+    super.push(element)
+    return element
   }
 
   focus() {
