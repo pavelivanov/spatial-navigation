@@ -5,6 +5,7 @@ import { EVENT_PREFIX } from './util/constants'
 // Use as @decorator on other components to enhance state
 
 class Store {
+
   constructor() {
     this.paused = false // if `true` disable listening all keyboard events
     

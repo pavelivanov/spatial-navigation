@@ -1,10 +1,11 @@
-import Collection from './Collection'
 import EA, { EventAggregator } from './EventAggregator'
 import { EVENT_PREFIX } from './util/constants'
+import Collection from './Collection'
 import Container from './Container'
 
 
 class ElementCollection extends Collection {
+
   constructor(parent, settings) {
     super()
 
@@ -18,7 +19,6 @@ class ElementCollection extends Collection {
 
   _extendElement(element) {
     element.parent = this.parent
-    element.parentCollection = this
 
     //this.eventAggregator.dispatchEvent(`${EVENT_PREFIX}addElement`, item)
     //EA.dispatchEvent(`${EVENT_PREFIX}addElement`, this.parent)
@@ -37,16 +37,17 @@ class ElementCollection extends Collection {
   }
 
   focus() {
-    if (this.parent instanceof Container && !Boolean(this.length)) {
+    if (this.parent.constructor.name === 'Container' && !Boolean(this.length)) {
       throw Error(`You must add at least one element to each container. Check ${this.parent.name} container`)
     }
 
     let elementIndex
 
-    if (this.focusedIndex == null) {
+    if (this.focusedIndex === null) {
       this.focusedIndex = elementIndex = 0
     }
     else {
+      // TODO this is never used!
       switch (this.enterTo) {
         case 'first':
           elementIndex = 0
@@ -74,7 +75,7 @@ class ElementCollection extends Collection {
   }
 
   lazyLoad() {
-    if (typeof this.onLazyLoad != 'function' || this.lazyLoading) {
+    if (typeof this.onLazyLoad !== 'function' || this.lazyLoading) {
       return
     }
 

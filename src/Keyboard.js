@@ -3,6 +3,7 @@ import { EVENT_PREFIX, EVENT_DELAY } from './util/constants'
 
 
 class Keyboard {
+
   constructor() {
     this.normalizedMap = {}
     this.bindListeners()
@@ -16,8 +17,8 @@ class Keyboard {
    */
   static getEventKey(keyCode, modifier) {
     const key = [ keyCode ]
-    
-    if (modifier instanceof KeyboardEvent) {
+
+    if (modifier && modifier.constructor.name === 'KeyboardEvent') {
       if (modifier.metaKey) {
         key.push('meta')
       }
@@ -46,11 +47,12 @@ class Keyboard {
   addToMap(mapping) {
     const normalizedMap = {}
 
-    if (!Boolean(mapping instanceof Array)) {
+    if (!Boolean(mapping.constructor.name === 'Array')) {
       mapping = [ mapping ]
     }
 
     mapping.forEach((map) => {
+      // TODO map doesn't contain modifier, so there is error in getEventKey
       const eventKey = Keyboard.getEventKey(map.keyCode, map.modifier)
 
       if (Boolean(eventKey in this.normalizedMap)) {
@@ -100,7 +102,7 @@ class Keyboard {
     const wrapper = function (event) {
       const eventKey = Keyboard.getEventKey(event.keyCode, event)
       
-      if (id != eventKey || eventKey.match(/\|/)) {
+      if (id !== eventKey || eventKey.match(/\|/)) {
         func.call(this, event)
         id = eventKey
       }

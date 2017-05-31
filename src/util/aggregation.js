@@ -1,3 +1,8 @@
+/*
+  Allows multiple extending
+
+ */
+
 const aggregation = (baseClass, ...mixins) => {
 
   let base = class _Combined extends baseClass {

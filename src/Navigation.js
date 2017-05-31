@@ -6,6 +6,7 @@ import ElementNavigation from './ElementNavigation'
 
 
 class Navigation {
+
   constructor() {
     /**
      * @type {null|Element}
@@ -44,7 +45,7 @@ class Navigation {
     // if there is no Element to navigate in passed direction
     if (!instanceToFocus) {
       // if parent of Element is Container
-      if (instance.parent instanceof Container) {
+      if (instance.parent.constructor.name === 'Container') {
         instanceToFocus = ContainerNavigation.getToNavigate(instance.parent, direction)
       }
       // if parent of Element is Element

@@ -8,12 +8,15 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class Element {
+
   /**
    * @param domEl
    * @param settings
    */
   static create = (domEl, settings) => new Element(domEl, settings)
 
+  // TODO wtf is hasCollection here?
+  // TODO wtf is collectionSettings here? It never used in ElementCollection!
   constructor(domEl, { keyBindings, autoFocus, hasCollection, collectionSettings } = {}) {
     this.domEl = domEl || null
     this.disabled = false
@@ -21,24 +24,25 @@ class Element {
      * @type {null|Container|Element}
      */
     this.parent = null
+    // TODO wtf is hasCollection here?
+    // TODO if there is Boolean when condition is wrong!
     this.collection = hasCollection || collectionSettings ? new ElementCollection(this, collectionSettings) : null
 
     if (domEl) {
       this.connectDomEl(domEl)
     }
 
-    if (Boolean(keyBindings)) {
+    if (keyBindings) {
       this.bindKeyAction(keyBindings)
     }
 
     if (autoFocus) {
-      if (Boolean(this.collection)) {
+      if (this.collection) {
         this.collection.eventAggregator.once(`${EVENT_PREFIX}addElement`, (element) => {
-          if (element == this) {
+          if (element === this) {
             this.focus()
             return true
           }
-
           return false
         })
       }
@@ -89,10 +93,10 @@ class Element {
     // going outside
     else {
       this.domEl.focus()
-      this.parentCollection.setFocusedIndex(this)
+      this.parent.collection.setFocusedIndex(this)
 
-      if (this.parent instanceof Element) {
-        this.parent.parentCollection.setFocusedIndex(this.parent)
+      if (this.parent.constructor.name === 'Element') {
+        this.parent.parent.collection.setFocusedIndex(this.parent)
       }
 
       if (Navigation.focusedElement) {
@@ -123,7 +127,7 @@ class Element {
   }
 
   getContainer(parent = this.parent) {
-    if (!parent || !Boolean(parent instanceof Container)) {
+    if (!parent || !Boolean(parent.constructor.name === 'Container')) {
       return this.getContainer(parent.parent)
     }
 

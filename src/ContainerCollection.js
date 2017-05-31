@@ -3,6 +3,7 @@ import { EventAggregator } from './EventAggregator'
 
 
 class ContainerCollection extends Collection {
+
   constructor() {
     super()
 

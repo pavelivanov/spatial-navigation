@@ -3,12 +3,13 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class EventAggregator {
+
   constructor() {
     this.events = []
   }
 
   getEvent(eventName) {
-    return this.events.filter((event) => event.name === eventName)[0]
+    return this.events.find(({ name }) => name === eventName)
   }
 
   dispatchEvent(eventName, ...eventArgs) {
@@ -24,10 +25,10 @@ class EventAggregator {
 
   /**
    *
-   * @param eventName
-   * @param handler
-   * @param priority
-   * @returns {{event: *, handler: *}}
+   * @param eventName {string}
+   * @param handler {function}
+   * @param priority {string|number}
+   * @returns {{ event: *, handler: * }}
    */
   subscribe(eventName, handler, priority) {
     let event = this.getEvent(eventName)
@@ -38,15 +39,16 @@ class EventAggregator {
     }
 
     event.addHandler(handler, priority)
+
     return { event, handler }
   }
 
   /**
    *
-   * @param eventName
-   * @param handler
-   * @param priority
-   * @returns {{event: *, handlerWrapper: (function(...[*]))}}
+   * @param eventName {string}
+   * @param handler {function}
+   * @param priority {string|number}
+   * @returns {{ event: *, handlerWrapper: (function(...[*])) }}
    */
   once(eventName, handler, priority) {
     let event = this.getEvent(eventName)
@@ -62,6 +64,7 @@ class EventAggregator {
         event.removeHandler(handlerWrapper, priority)
       }
     }
+
     event.addHandler(handlerWrapper, priority)
 
     return { event, handlerWrapper }

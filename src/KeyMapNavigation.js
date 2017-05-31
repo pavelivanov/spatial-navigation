@@ -3,6 +3,7 @@ import Navigation from './Navigation'
 
 
 class KeyMapNavigation {
+
   constructor() {
     this.map = {}
     

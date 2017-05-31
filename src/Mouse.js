@@ -1,4 +1,5 @@
 class Mouse {
+
   constructor() {
     this.bindListeners()
   }

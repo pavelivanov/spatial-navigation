@@ -1,13 +1,23 @@
+//import Element from './Element'
+//import Container from './Container'
+
+
 class Collection {
+
   constructor() {
     this.items = []
     this.itemIds = {}
   }
 
   add(item, name) {
-    this.items.push(item)
+    this.push(item)
 
-    if (!name) {
+    if (item.constructor.name === 'Element') {
+      return item
+    }
+
+    //if (item.constructor.name === 'Container' && !name) {
+    if (item.constructor.name === 'Container' && !name) {
       throw Error('You must pass name of item you try add to Collection')
     }
 
@@ -15,7 +25,7 @@ class Collection {
       this.itemIds = {}
     }
 
-    if (Boolean(name in this.itemIds)) {
+    if (name in this.itemIds) {
       console.warn(`Item with name "${name}" already exists in Collection`)
     }
 

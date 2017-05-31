@@ -6,6 +6,7 @@ import { EVENT_PREFIX } from './util/constants'
 
 
 class Container {
+
   /**
    * @param name
    * @param options
@@ -22,24 +23,23 @@ class Container {
 
     if (autoFocus) {
       EA.once(`${EVENT_PREFIX}addElement`, (instance) => {
-        if (instance instanceof Container ? this == instance : this == instance.getContainer()) {
+        if (this === instance || this === instance.getContainer()) {
           this.focus()
           return true
         }
-
         return false
       })
     }
 
-    if (Boolean(keyBindings)) {
+    if (keyBindings) {
       this.bindKeyAction(keyBindings)
     }
   }
 
   bindKeyAction(mapping) {
-    const normailizedMap = Keyboard.addToMap(mapping)
+    const normalizedMap = Keyboard.addToMap(mapping)
 
-    KeyMapNavigation.addRelation(normailizedMap, this)
+    KeyMapNavigation.addRelation(normalizedMap, this)
   }
 
   disable() {
