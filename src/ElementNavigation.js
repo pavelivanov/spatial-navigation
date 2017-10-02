@@ -9,7 +9,7 @@ class ElementNavigation {
     switch (direction) {
       case 'up':
       case 'down':
-        if (direction == 'up') {
+        if (direction === 'up') {
           element = currElement.parent.collection.getByIndex(currIndex - countInRow)
         }
         else {
@@ -27,13 +27,13 @@ class ElementNavigation {
         break
 
       case 'left':
-        if (currIndex % countInRow != 0) {
+        if (currIndex % countInRow !== 0) {
           element = currElement.parent.collection.getByIndex(--currIndex)
         }
         break
 
       case 'right':
-        if ((currIndex + 1) % countInRow != 0) {
+        if ((currIndex + 1) % countInRow !== 0) {
           element = currElement.parent.collection.getByIndex(++currIndex)
         }
         break
@@ -48,7 +48,7 @@ class ElementNavigation {
     ) {
       const countFromEnd = this.getCountFromEnd(element, direction)
 
-      if (element.parent.collection.settings.lazy[direction].fromEnd == countFromEnd) {
+      if (element.parent.collection.settings.lazy[direction].fromEnd === countFromEnd) {
         element.parent.collection.lazyLoad()
       }
     }
